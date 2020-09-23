@@ -3,7 +3,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 module.exports = {
   entry: {
-    app: './web/public/app/src/index.js'
+    app: './app/src/index.js'
   },
   externals: {
   },
@@ -62,7 +62,7 @@ module.exports = {
   ],
   output: {
     filename: 'js/[name].bundle.js',
-    path: path.resolve(__dirname, '../../dist'),
-    publicPath: '../dist/'
+    path: path.resolve(__dirname, '../../static/dist'),
+    publicPath: '../../static/dist/'
   }
 }
