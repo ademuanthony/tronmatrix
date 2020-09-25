@@ -1,7 +1,7 @@
 const multiplier = 1000000;
-const contractAddress = 'TFKKpXfSk3JULVepicPWEdqMPpjeoKEgoc';
-const networkApi = 'https://api.shasta.trongrid.io/'
-// const networkApi = 'https://api.trongrid.io/
+const contractAddress = 'TGc4NVjUVj1QrDLYRE5RWHcBe26qNAkVp2'; // 4148c8f0e55886d5bc7d47f22759e68ed10107ee7f
+// const networkApi = 'https://api.shasta.trongrid.io/'
+const networkApi = 'https://api.trongrid.io/'
 
 let tronWebGlobal;
 let contractGlobal;
@@ -29,7 +29,7 @@ if (sessionStorage.isViewOnly === 'true') {
 			});
 		}
 		if (typeof sessionStorage.currentAccount === 'undefined' || sessionStorage.currentAccount === 'undefined') {
-			sessionStorage.currentAccount = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL';
+			sessionStorage.currentAccount = 'TQjV8oCVxqAVZxRRoUu7TJ8eSSmrWjKFtS';
 		}
 		await tronWebGlobal.setAddress(sessionStorage.currentAccount);
 		tronWebGlobal.contract().at(contractAddress).then((contract) => {
@@ -309,7 +309,7 @@ function getUserDetails() {
 	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then((result) => {
 		$('#idLevel').html(parseInt(result[0]._hex));
 		$('.idNum').html(parseInt(result[1]._hex));
-		$('#affLink').find('p').text('https://dapp.tronmatrix.com/?refId=' + parseInt(result[1]._hex));
+		$('#affLink').find('p').text('https://tronmatrix.ew.r.appspot.com/start?refId=' + parseInt(result[1]._hex));
 		if (result[1]._hex == 1) {
 			isOwner = true;
 		}
