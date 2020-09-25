@@ -28,13 +28,13 @@
 </head>
 
 <!-- [ signin-img ] start -->
-<div class="auth-wrapper align-items-stretch aut-bg-img" data-controller="login">
+<div class="auth-wrapper align-items-stretch aut-bg-img" style="background-image: url(/static/img/Blockchain-bg.jpg) !important;" data-controller="login">
 	<div class="flex-grow-1">
 		<div class="h-100 d-md-flex align-items-center auth-side-img">
 			<div class="col-sm-10 auth-content w-auto">
 				<h1 class="text-white my-4">Tron Matrix</h1>
 				<h4 class="text-white font-weight-normal">
-					Fastest and easiest way to make over 500000 TRX every 60 days.<br />
+					Fastest and easiest way to make over 500000 TRX every 90 days.<br />
                     Built for You
 				</h4>
 			</div>
@@ -76,6 +76,15 @@
 	</div>
 </div>
 <!-- [ signin-img ] end -->
+    
+<div id="fade" class="well" style="background-color: white; padding: 5px;">
+	<button class="fade_close popup_close">x</button>
+	<span></span>
+</div>
+<div id="fadeLoading" class="well" style="background-color: white; padding: 5px;">
+	<span></span>
+	<img class="loading_image" src="/static/assets/images/loader.svg"  alt="loading"/>
+</div>
 
 <!-- Required Js -->
 <script src="/static/assets/js/vendor-all.min.js"></script>
@@ -90,6 +99,17 @@
 <script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
 <script src="/static/js/common.js"></script>
 
+<script>
+    $('#fade').popup({
+		transition: 'all 0.3s',
+	});
+	$('#fadeLoading').popup({
+		transition: 'all 0.3s',
+		escape: false,
+		blur: false
+	});
+	$.fn.popup.defaults.pagecontainer = '#wrapper'
+</script>
 </body>
 
 </html>

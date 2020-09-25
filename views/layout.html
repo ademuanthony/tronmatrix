@@ -25,7 +25,7 @@
     
 
 </head>
-<body class="wrapper background-img-2">
+<body id="wrapper" class="background-img-2">
     
 	<!-- [ Pre-loader ] start -->
 	<div class="loader-bg">
@@ -62,14 +62,14 @@
                     <li class="nav-item">
                         <a href="/team" class="nav-link ">
                             <span class="pcoded-micon">
-                            <i class="feather icon-users"></i>
+                            <i class="feather icon-share-2"></i>
                         </span>
                         <span class="pcoded-mtext">Team Members</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="/upline" class="nav-link ">
                             <span class="pcoded-micon">
-                            <i class="feather icon-share-2"></i>
+                            <i class="feather icon-users"></i>
                         </span>
                         <span class="pcoded-mtext">Upline</span></a>
                     </li>
@@ -173,7 +173,17 @@
 	</header>
 	<!-- [ Header ] end -->
 	
-	{{.LayoutContent}}
+    {{.LayoutContent}}
+    
+    
+<div id="fade" class="well" style="background-color: white; padding: 5px;">
+	<button class="fade_close popup_close">x</button>
+	<span></span>
+</div>
+<div id="fadeLoading" class="well" style="background-color: white; padding: 5px;">
+	<span></span>
+	<img class="loading_image" src="/static/assets/images/loader.svg"  alt="loading"/>
+</div>
 
 <!-- [ Main Content ] end -->
     <!-- Warning Section start -->
@@ -238,12 +248,15 @@
 <script src="{{.Script}}"></script>
 
 <script>
-    $('#fadeLoading').popup({
-			transition: 'all 0.3s',
-			escape: false,
-			blur: false
-		});
-		$.fn.popup.defaults.pagecontainer = '#wrapper'
+    $('#fade').popup({
+		transition: 'all 0.3s',
+	});
+	$('#fadeLoading').popup({
+		transition: 'all 0.3s',
+		escape: false,
+		blur: false
+	});
+	$.fn.popup.defaults.pagecontainer = '#wrapper'
 </script>
 </body>
 

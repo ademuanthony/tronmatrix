@@ -2,9 +2,10 @@ function init() {
 	$('.loader-section').css('display', 'none');
 	showPopup('#fadeLoading', 'Please Wait while the data is loading!');
 	getUserDetails();
+	getUserDetails1();
 }
 
-function getUserDetails() {
+function getUserDetails1() {
 	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then((result) => {
 		$('#idLevel').html(parseInt(result[0]._hex));
 		$('#idNum').html(parseInt(result[1]._hex));

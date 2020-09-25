@@ -9,41 +9,6 @@ let isOwner = false;
 let refer = '';
 let isReferredLink = false;
 
-let notify
-$(window).on('load', function() {
-	notify = (message, type) => {
-			$.notify({
-					message: message
-			}, {
-					type: type,
-					allow_dismiss: false,
-					label: 'Cancel',
-					className: 'btn-xs btn-inverse',
-					placement: {
-							from: 'bottom',
-							align: 'right'
-					},
-					delay: 2500,
-					animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-					},
-					offset: {
-							x: 30,
-							y: 30
-					}
-			});
-	};
-});
-
-function showPopup(el, text) {
-	if (!notify) {
-		window.alert(text)
-		return
-	}
-	notify(text, 'inverse')
-}
-
 if (sessionStorage.isViewOnly === 'true') {
 	$(async function () {
 		const queryString = window.location.search;
