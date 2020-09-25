@@ -116,6 +116,9 @@ async function fillUplineData(obj, _level) {
 	let entries = _level + 4;
 	for (let i = 0; i < entries; i++) {
 		let address = obj[i];
+		if (address === '410000000000000000000000000000000000000000') {
+			continue
+		}
 		let id, level;
 		if (address !== '410000000000000000000000000000000000000000') {
 			let user = await contractGlobal.getUserDetails(address).call();

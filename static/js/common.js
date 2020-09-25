@@ -1,5 +1,5 @@
 const multiplier = 1000000;
-const contractAddress = 'TVLnogJQwoanCJZFycEUjQCWDKoRKurADV';
+const contractAddress = 'TFKKpXfSk3JULVepicPWEdqMPpjeoKEgoc';
 const networkApi = 'https://api.shasta.trongrid.io/'
 // const networkApi = 'https://api.trongrid.io/
 
@@ -343,7 +343,7 @@ function _init(addr) {
 function getUserDetails() {
 	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then((result) => {
 		$('#idLevel').html(parseInt(result[0]._hex));
-		$('#idNum').html(parseInt(result[1]._hex));
+		$('.idNum').html(parseInt(result[1]._hex));
 		$('#affLink').find('p').text('https://dapp.tronmatrix.com/?refId=' + parseInt(result[1]._hex));
 		if (result[1]._hex == 1) {
 			isOwner = true;
@@ -365,6 +365,7 @@ function buyLevelTrigger(level) {
 				$('#level6').children().find('p').text("Active");
 				isOwner ? $('#level6').children().find('p.expire').text("") : $('#level6').children().find('p.expire').text(days + " days left");
 				$('#level6').children().addClass('buyLevelActivated');
+				$('#level6').addClass('bg-c-green')
 			}).catch((err) => {
 				console.error('Call for Level Expire Failed');
 				console.log(err);
@@ -377,6 +378,7 @@ function buyLevelTrigger(level) {
 				$('#level5').children().find('p').text("Active");
 				isOwner ? $('#level5').children().find('p.expire').text("") : $('#level5').children().find('p.expire').text(days + " days left");
 				$('#level5').children().addClass('buyLevelActivated');
+				$('#level5').addClass('bg-c-green')
 			}).catch((err) => {
 				console.error('Call for Level Expire Failed');
 				console.log(err);
@@ -389,6 +391,7 @@ function buyLevelTrigger(level) {
 				$('#level4').children().find('p').text("Active");
 				isOwner ? $('#level4').children().find('p.expire').text("") : $('#level4').children().find('p.expire').text(days + " days left");
 				$('#level4').children().addClass('buyLevelActivated');
+				$('#level4').addClass('bg-c-green')
 			}).catch((err) => {
 				console.error('Call for Level Expire Failed');
 				console.log(err);
@@ -401,6 +404,7 @@ function buyLevelTrigger(level) {
 				$('#level3').children().find('p').text("Active");
 				isOwner ? $('#level3').children().find('p.expire').text("") : $('#level3').children().find('p.expire').text(days + " days left");
 				$('#level3').children().addClass('buyLevelActivated');
+				$('#level3').addClass('bg-c-green')
 			}).catch((err) => {
 				console.error('Call for Level Expire Failed');
 				console.log(err);
@@ -413,6 +417,7 @@ function buyLevelTrigger(level) {
 				$('#level2').children().find('p').text("Active");
 				isOwner ? $('#level2').children().find('p.expire').text("") : $('#level2').children().find('p.expire').text(days + " days left");
 				$('#level2').children().addClass('buyLevelActivated');
+				$('#level2').addClass('bg-c-green')
 			}).catch((err) => {
 				console.error('Call for Level Expire Failed');
 				console.log(err);
@@ -425,6 +430,7 @@ function buyLevelTrigger(level) {
 				$('#level1').children().find('p').text("Active");
 				isOwner ? $('#level1').children().find('p.expire').text("") : $('#level1').children().find('p.expire').text(days + " days left");
 				$('#level1').children().addClass('buyLevelActivated');
+				$('#level1').addClass('bg-c-green')
 			}).catch((err) => {
 				console.error('Call for Level Expire Failed');
 				console.log(err);

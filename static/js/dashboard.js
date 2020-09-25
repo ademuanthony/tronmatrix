@@ -3,16 +3,18 @@ let total = 0;
 let referral24Hours = 0
 let totalUsers24Hours = 0;
 
-const loader = '<img style="height: 19px" class="loading_image" src="/static/assets/images/loader.svg"  alt="loading"/>'
-$('#totalUsers').html(loader);
-$('#totalEth').html(loader);
-$('#totalUSD').html(loader);
-$('#partnersUser').html(loader);
-$('#totalDay').html(loader);
-$('#earnedEth').html(loader);
-$('#earnedUSD').html(loader);
-$('#idLevel').html(loader);
-$('#idNum').html(loader);
+$(document).ready(function () {
+	const loader = '<img style="height: 19px" class="loading_image" src="/static/assets/images/loader.svg"  alt="loading"/>'
+	$('#totalUsers').html(loader);
+	$('#totalEth').html(loader);
+	$('#totalUSD').html(loader);
+	$('#partnersUser').html(loader);
+	$('#totalDay').html(loader);
+	$('#earnedEth').html(loader);
+	$('#earnedUSD').html(loader);
+	$('#idLevel').html(loader);
+	$('#idNum').html(loader);
+})
 	
 function init() {
 	let url = "https://api.coingecko.com/api/v3/simple/price?ids=tron&vs_currencies=usd";
@@ -154,7 +156,7 @@ function getTotalUsers() {
 }
 
 function addEventsForLevelBuy(level) {
-	let price = [1000, 3000, 20000, 100000, 250000, 500000];
+	let price = [500, 3000, 20000, 100000, 250000, 500000];
 	let value = price[level - 1] * multiplier;
 
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');

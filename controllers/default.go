@@ -21,5 +21,29 @@ func (c *MainController) Start() {
 }
 
 func (c *MainController) Dashboard() {
+	c.Data["adminActive"] = "active"
+	c.Data["Script"] = "/static/js/dashboard.js"
+	c.Layout = "layout.html"
 	c.TplName = "dashboard.html"
+}
+
+func (c *MainController) MyTeam() {
+	c.Data["teamActive"] = "active"
+	c.Data["Script"] = "/static/js/team.js"
+	c.Layout = "layout.html"
+	c.TplName = "team.html"
+}
+
+func (c *MainController) Upline() {
+	c.Data["teamActive"] = "active"
+	c.Data["Script"] = "/static/js/uplines.js"
+	c.Layout = "layout.html"
+	c.TplName = "upline.html"
+}
+
+func (c *MainController) LostProfit() {
+	c.Data["teamActive"] = "active"
+	c.Data["Script"] = "/static/js/lost.js"
+	c.Layout = "layout.html"
+	c.TplName = "lost.html"
 }

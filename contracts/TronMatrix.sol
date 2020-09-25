@@ -251,14 +251,15 @@ contract TronMatrix {
 		// owner = 0x262e1f53533cD7C0AfCbe68250b7008fd6da2a67;
 		owner = msg.sender;
 
+// 500, 3000, 20000, 100000, 250000, 500000
 		last_uid++;
 		creator = msg.sender;
 		levelPrice[1] = 500 * 1000000;
-		levelPrice[2] = 1500 * 1000000;
-		levelPrice[3] = 10000 * 1000000;
-		levelPrice[4] = 50000 * 1000000;
-		levelPrice[5] = 125000 * 1000000;
-		levelPrice[6] = 250000 * 1000000;
+		levelPrice[2] = 3000 * 1000000;
+		levelPrice[3] = 20000 * 1000000;
+		levelPrice[4] = 100000 * 1000000;
+		levelPrice[5] = 250000 * 1000000;
+		levelPrice[6] = 500000 * 1000000;
 		uplines[1] = 5;
 		uplines[2] = 6;
 		uplines[3] = 7;
@@ -266,11 +267,11 @@ contract TronMatrix {
 		uplines[5] = 9;
 		uplines[6] = 10;
 		incentive[1] = 90 * 1000000;
-		incentive[2] = 205 * 1000000;
-		incentive[3] = 1250 * 1000000;
-		incentive[4] = 5550 * 1000000;
-		incentive[5] = 12000 * 1000000;
-		incentive[6] = 23500 * 1000000;
+		incentive[2] = 450 * 1000000;
+		incentive[3] = 2550 * 1000000;
+		incentive[4] = 10825 * 1000000;
+		incentive[5] = 23750 * 1000000;
+		incentive[6] = 45225 * 1000000;
 
 		users[creator] = User({
 		id : last_uid,
