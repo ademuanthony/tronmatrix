@@ -309,7 +309,7 @@ function getUserDetails() {
 	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then((result) => {
 		$('#idLevel').html(parseInt(result[0]._hex));
 		$('.idNum').html(parseInt(result[1]._hex));
-		$('#affLink').find('p').text('https://tronmatrix.ew.r.appspot.com/start?refId=' + parseInt(result[1]._hex));
+		$('#affLink').find('p').text('http://www.tronmatrix.xyz/start?refId=' + parseInt(result[1]._hex));
 		if (result[1]._hex == 1) {
 			isOwner = true;
 		}
