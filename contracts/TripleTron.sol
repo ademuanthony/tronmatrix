@@ -143,7 +143,7 @@ library SafeMath {
 	}
 }
 
-contract TronMatrix {
+contract TripleTron {
 	using SafeMath for uint;
 
 	bool public contractStatus;

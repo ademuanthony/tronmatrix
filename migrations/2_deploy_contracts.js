@@ -1,5 +1,5 @@
-var TronMatrix = artifacts.require("./TronMatrix.sol");
+var TripleTron = artifacts.require("./TripleTron.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(TronMatrix);
+  deployer.deploy(TripleTron);
 };
