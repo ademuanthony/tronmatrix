@@ -1,11 +1,11 @@
 {
   "contractName": "SafeMath",
   "abi": [],
-  "bytecode": "0x604c6023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820cc53bcf1012f7404da8c159d38776b713e0fdfbaa4254509a1a752662343537f0029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820cc53bcf1012f7404da8c159d38776b713e0fdfbaa4254509a1a752662343537f0029",
+  "bytecode": "0x604c6023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058209987e0ebc1851f6a37f4dd90df85545373b8a3c53445f42b49a34775fb12b30d0029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058209987e0ebc1851f6a37f4dd90df85545373b8a3c53445f42b49a34775fb12b30d0029",
   "sourceMap": "25:4119:0:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
   "deployedSourceMap": "25:4119:0:-;;;;;;;;",
-  "source": "pragma solidity ^0.5.8;\n\nlibrary SafeMath {\n\t/**\n\t * @dev Returns the addition of two unsigned integers, reverting on\n\t * overflow.\n\t *\n\t * Counterpart to Solidity's `+` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Addition cannot overflow.\n\t */\n\tfunction add(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\tuint256 c = a + b;\n\t\trequire(c >= a, \"SafeMath: addition overflow\");\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the subtraction of two unsigned integers, reverting on\n\t * overflow (when the result is negative).\n\t *\n\t * Counterpart to Solidity's `-` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Subtraction cannot overflow.\n\t */\n\tfunction sub(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\treturn sub(a, b, \"SafeMath: subtraction overflow\");\n\t}\n\n\t/**\n\t * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\n\t * overflow (when the result is negative).\n\t *\n\t * Counterpart to Solidity's `-` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Subtraction cannot overflow.\n\t */\n\tfunction sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n\t\trequire(b <= a, errorMessage);\n\t\tuint256 c = a - b;\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the multiplication of two unsigned integers, reverting on\n\t * overflow.\n\t *\n\t * Counterpart to Solidity's `*` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Multiplication cannot overflow.\n\t */\n\tfunction mul(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\t// Gas optimization: this is cheaper than requiring 'a' not being zero, but the\n\t\t// benefit is lost if 'b' is also tested.\n\t\t// See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\n\t\tif (a == 0) {\n\t\t\treturn 0;\n\t\t}\n\n\t\tuint256 c = a * b;\n\t\trequire(c / a == b, \"SafeMath: multiplication overflow\");\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the integer division of two unsigned integers. Reverts on\n\t * division by zero. The result is rounded towards zero.\n\t *\n\t * Counterpart to Solidity's `/` operator. Note: this function uses a\n\t * `revert` opcode (which leaves remaining gas untouched) while Solidity\n\t * uses an invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction div(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\treturn div(a, b, \"SafeMath: division by zero\");\n\t}\n\n\t/**\n\t * @dev Returns the integer division of two unsigned integers. Reverts with custom message on\n\t * division by zero. The result is rounded towards zero.\n\t *\n\t * Counterpart to Solidity's `/` operator. Note: this function uses a\n\t * `revert` opcode (which leaves remaining gas untouched) while Solidity\n\t * uses an invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n\t\trequire(b > 0, errorMessage);\n\t\tuint256 c = a / b;\n\t\t// assert(a == b * c + a % b); // There is no case in which this doesn't hold\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\n\t * Reverts when dividing by zero.\n\t *\n\t * Counterpart to Solidity's `%` operator. This function uses a `revert`\n\t * opcode (which leaves remaining gas untouched) while Solidity uses an\n\t * invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction mod(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\treturn mod(a, b, \"SafeMath: modulo by zero\");\n\t}\n\n\t/**\n\t * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\n\t * Reverts with custom message when dividing by zero.\n\t *\n\t * Counterpart to Solidity's `%` operator. This function uses a `revert`\n\t * opcode (which leaves remaining gas untouched) while Solidity uses an\n\t * invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n\t\trequire(b != 0, errorMessage);\n\t\treturn a % b;\n\t}\n}\n\ncontract TripleTron {\n\tusing SafeMath for uint;\n\n\tbool public contractStatus;\n\taddress public owner;\n\taddress public creator;\n\tuint public maxLevel = 6;\n\tuint public referralLimit = 3;\n\tmapping(address => User) public users;\n\tmapping(uint => address) public userAddresses;\n\tuint public last_uid;\n\tmapping(uint => uint) public levelPrice;\n\tmapping(uint => uint) public uplines;\n\tmapping(uint => uint) public incentive;\n\tmapping(address => ProfitsReceived) public profitsReceived;\n\tmapping(address => ProfitsLost) public profitsLost;\n\tuint public levelDown;\n\n\tevent RegisterUserEvent(address indexed user, address indexed referrer, uint time);\n\tevent BuyLevelEvent(address indexed user, uint indexed level, uint time);\n\tevent GetLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);\n\tevent LostLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);\n\n\tstring public name;\n\tstring public symbol;\n\tuint public decimals;\n\tmapping(address => uint) public balances;\n\tuint public totalSupply;\n\tuint public rate;\n\tuint public maxTokenAmount;\n\n\tevent Transfer(address from, address to, uint amount, uint time);\n\n\tstruct User {\n\t\tuint id;\n\t\tuint referrerID;\n\t\taddress[] referrals;\n\t\tmapping(uint => uint) levelActivationTime;\n\t\tuint created;\n\t}\n\n\tstruct ProfitsReceived {\n\t\tuint uid;\n\t\tuint[] fromId;\n\t\taddress[] fromAddr;\n\t\tuint[] amount;\n\t\tuint[] level;\n\t}\n\n\tstruct ProfitsLost {\n\t\tuint uid;\n\t\tuint[] toId;\n\t\taddress[] toAddr;\n\t\tuint[] amount;\n\t\tuint[] level;\n\t}\n\n\tmodifier contractActive() {\n\t\trequire(contractStatus == true);\n\t\t_;\n\t}\n\tmodifier validLevelAmount(uint _level) {\n\t\trequire(msg.value == levelPrice[_level], 'Invalid level amount sent');\n\t\t_;\n\t}\n\tmodifier userRegistered() {\n\t\trequire(users[msg.sender].id != 0, 'User does not exist');\n\t\t_;\n\t}\n\tmodifier validReferrerID(uint _referrerID) {\n\t\trequire(_referrerID > 0 && _referrerID <= last_uid, 'Invalid referrer ID');\n\t\trequire(users[msg.sender].id != _referrerID, 'Refer ID cannot be same as User ID');\n\t\t_;\n\t}\n\tmodifier userNotRegistered() {\n\t\trequire(users[msg.sender].id == 0, 'User is already registered');\n\t\t_;\n\t}\n\tmodifier validLevel(uint _level) {\n\t\trequire(_level > 0 && _level <= maxLevel, 'Invalid level entered');\n\t\t_;\n\t}\n\tmodifier checkTotalSupply() {\n\t\trequire(_getTokenAmount(msg.value).add(totalSupply) < maxTokenAmount, \"Maximum token amount crossed\");\n\t\t_;\n\t}\n\tmodifier checkTotalSupplyWithAmount(uint amount) {\n\t\trequire(amount.add(totalSupply) < maxTokenAmount, \"Maximum token amount crossed\");\n\t\t_;\n\t}\n\tmodifier onlyCreator() {\n\t\trequire(msg.sender == creator, 'You are not the creator');\n\t\t_;\n\t}\n\n\tconstructor() public {\n\t\tcontractStatus = true;\n\t\tname = \"TripleTron\";\n\t\tsymbol = \"TPX\";\n\t\ttotalSupply = 0;\n\t\tdecimals = 3;\n\t\trate = 100;\n\t\tmaxTokenAmount = 500000000 * (10 ** decimals);\n\t\tlevelDown = 11;\n\t\t// owner = 0x262e1f53533cD7C0AfCbe68250b7008fd6da2a67;\n\t\towner = msg.sender;\n\n\t\tlast_uid++;\n\t\tcreator = msg.sender;\n\t\tlevelPrice[1] = 100 * 1000000;\n\t\tlevelPrice[2] = 500 * 1000000;\n\t\tlevelPrice[3] = 1000 * 1000000;\n\t\tlevelPrice[4] = 3000 * 1000000;\n\t\tlevelPrice[5] = 10000 * 1000000;\n\t\tlevelPrice[6] = 30000 * 1000000;\n\t\tuplines[1] = 5;\n\t\tuplines[2] = 6;\n\t\tuplines[3] = 7;\n\t\tuplines[4] = 8;\n\t\tuplines[5] = 9;\n\t\tuplines[6] = 10;\n\t\tincentive[1] = 18 * 1000000;\n\t\tincentive[2] = 75 * 1000000;\n\t\tincentive[3] = 128 * 1000000;\n\t\tincentive[4] = 325 * 1000000;\n\t\tincentive[5] = 1000 * 1000000;\n\t\tincentive[6] = 2750 * 1000000;\n\n\t\tusers[creator] = User({\n\t\tid : last_uid,\n\t\treferrerID : 0,\n\t\treferrals : new address[](0),\n\t\tcreated : block.timestamp\n\t\t});\n\t\tuserAddresses[last_uid] = creator;\n\n\t\tfor (uint i = 1; i <= maxLevel; i++) {\n\t\t\tusers[creator].levelActivationTime[i] = block.timestamp;\n\t\t}\n\t}\n\n\tfunction changeLevelPrice1(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[1] = newValue;\n\t}\n\n\tfunction changeLevelPrice2(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[2] = newValue;\n\t}\n\n\tfunction changeLevelPrice3(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[3] = newValue;\n\t}\n\n\tfunction changeLevelPrice4(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[4] = newValue;\n\t}\n\n\tfunction changeLevelPrice5(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[5] = newValue;\n\t}\n\n\tfunction changeLevelPrice6(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[6] = newValue;\n\t}\n\n\tfunction changeUplines1(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[1] = newValue;\n\t}\n\n\tfunction changeUplines2(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[2] = newValue;\n\t}\n\n\tfunction changeUplines3(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[3] = newValue;\n\t}\n\n\tfunction changeUplines4(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[4] = newValue;\n\t}\n\n\tfunction changeUplines5(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[5] = newValue;\n\t}\n\n\tfunction changeUplines6(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[6] = newValue;\n\t}\n\n\tfunction changeIncentive1(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[1] = newValue;\n\t}\n\n\tfunction changeIncentive2(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[2] = newValue;\n\t}\n\n\tfunction changeIncentive3(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[3] = newValue;\n\t}\n\n\tfunction changeIncentive4(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[4] = newValue;\n\t}\n\n\tfunction changeIncentive5(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[5] = newValue;\n\t}\n\n\tfunction changeIncentive6(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[6] = newValue;\n\t}\n\n\tfunction changeContractStatus(bool newValue)\n\tpublic\n\tonlyCreator() {\n\t\tcontractStatus = newValue;\n\t}\n\n\tfunction changeLevelDown(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelDown = newValue;\n\t}\n\n\tfunction() external payable {\n\t\trevert();\n\t}\n\n\tfunction transfer(address receiver, uint amount) public {\n\t\trequire(amount <= balances[msg.sender], \"Insufficient balance.\");\n\n\t\tbalances[msg.sender] = balances[msg.sender].sub(amount);\n\t\tbalances[receiver] = balances[receiver].add(amount);\n\n\t\temit Transfer(msg.sender, receiver, amount, block.timestamp);\n\t}\n\n\tfunction mint(uint amount)\n\tpublic\n\tonlyCreator()\n\tcheckTotalSupplyWithAmount(amount) {\n\t\tbalances[creator] = balances[creator].add(amount);\n\t\ttotalSupply = totalSupply.add(amount);\n\t}\n\n\tfunction balanceOf(address _user) public view returns (uint) {\n\t\treturn balances[_user];\n\t}\n\n\tfunction _getTokenAmount(uint _weiAmount) internal view returns (uint) {\n\t\tuint tokenAmount = _weiAmount;\n\t\ttokenAmount = tokenAmount.mul(rate);\n\t\ttokenAmount = tokenAmount.div(100 * (10 ** decimals));\n\t\treturn tokenAmount;\n\t}\n\n\tfunction registerUser(uint _referrerID, uint randNum)\n\tpublic\n\tpayable\n\tuserNotRegistered()\n\tvalidReferrerID(_referrerID)\n\tcheckTotalSupply()\n\tcontractActive()\n\tvalidLevelAmount(1) {\n\t\tuint amount = _getTokenAmount(msg.value);\n\t\tbalances[msg.sender] = balances[msg.sender].add(amount);\n\t\ttotalSupply = totalSupply.add(amount);\n\n\t\tif (users[userAddresses[_referrerID]].referrals.length >= referralLimit) {\n\t\t\t_referrerID = users[findReferrer(userAddresses[_referrerID], true, randNum)].id;\n\t\t}\n\t\tlast_uid++;\n\t\tusers[msg.sender] = User({\n\t\tid : last_uid,\n\t\treferrerID : _referrerID,\n\t\treferrals : new address[](0),\n\t\tcreated : block.timestamp\n\t\t});\n\t\tuserAddresses[last_uid] = msg.sender;\n\t\tusers[msg.sender].levelActivationTime[1] = block.timestamp;\n\t\tusers[userAddresses[_referrerID]].referrals.push(msg.sender);\n\n\t\ttransferLevelPayment(1, msg.sender);\n\n\t\temit RegisterUserEvent(msg.sender, userAddresses[_referrerID], block.timestamp);\n\t}\n\n\tfunction buyLevel(uint _level)\n\tpublic\n\tpayable\n\tuserRegistered()\n\tvalidLevel(_level)\n\tcheckTotalSupply()\n\tcontractActive()\n\tvalidLevelAmount(_level) {\n\t\tuint amount = _getTokenAmount(msg.value);\n\t\tbalances[msg.sender] = balances[msg.sender].add(amount);\n\t\ttotalSupply = totalSupply.add(amount);\n\n\t\tfor (uint l = _level - 1; l > 0; l--) {\n\t\t\trequire(users[msg.sender].levelActivationTime[l] > 0, 'Buy previous level first');\n\t\t}\n\t\trequire(users[msg.sender].levelActivationTime[_level] == 0, 'Level already active');\n\n\t\tusers[msg.sender].levelActivationTime[_level] = block.timestamp;\n\n\t\ttransferLevelPayment(_level, msg.sender);\n\t\temit BuyLevelEvent(msg.sender, _level, block.timestamp);\n\t}\n\n\tfunction findReferrer(address _user, bool traverseDown, uint randNum)\n\tpublic\n\tview\n\treturns (address) {\n\t\tif (users[_user].referrals.length < referralLimit) {\n\t\t\treturn _user;\n\t\t}\n\n\t\tuint arraySize = 3 * ((3 ** levelDown) - 1);\n\t\tuint previousLineSize = 3 * ((3 ** (levelDown - 1)) - 1);\n\t\taddress referrer;\n\t\taddress[] memory referrals = new address[](arraySize);\n\t\treferrals[0] = users[_user].referrals[0];\n\t\treferrals[1] = users[_user].referrals[1];\n\t\treferrals[2] = users[_user].referrals[2];\n\n\t\tfor (uint i = 0; i < arraySize; i++) {\n\t\t\tif (users[referrals[i]].referrals.length < referralLimit) {\n\t\t\t\treferrer = referrals[i];\n\t\t\t\tbreak;\n\t\t\t}\n\n\t\t\tif (i < previousLineSize) {\n\t\t\t\treferrals[(i + 1) * 3] = users[referrals[i]].referrals[0];\n\t\t\t\treferrals[(i + 1) * 3 + 1] = users[referrals[i]].referrals[1];\n\t\t\t\treferrals[(i + 1) * 3 + 2] = users[referrals[i]].referrals[2];\n\t\t\t}\n\t\t}\n\n\t\tif (referrer == address(0) && traverseDown == true) {\n\t\t\tif (randNum >= previousLineSize && randNum < arraySize) {\n\t\t\t\taddress childAddress = findReferrer(referrals[randNum], false, randNum);\n\t\t\t\tif (childAddress != address(0)) {\n\t\t\t\t\treferrer = childAddress;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tif (referrer == address(0)) {\n\t\t\t\tfor (uint i = previousLineSize; i < arraySize; i++) {\n\t\t\t\t\taddress childAddress = findReferrer(referrals[i], false, randNum);\n\t\t\t\t\tif (childAddress != address(0)) {\n\t\t\t\t\t\treferrer = childAddress;\n\t\t\t\t\t\tbreak;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\trequire(referrer != address(0), 'Referrer not found');\n\t\t}\n\n\t\treturn referrer;\n\t}\n\n\tfunction transferLevelPayment(uint _level, address _user) internal {\n\t\taddress referrer;\n\t\tuint sentValue = 0;\n\n\t\tfor (uint i = 1; i <= uplines[_level]; i++) {\n\t\t\treferrer = getUserUpline(_user, i);\n\t\t\tif (referrer == address(0)) {\n\t\t\t\treferrer = owner;\n\t\t\t}\n\n\t\t\tif (users[referrer].levelActivationTime[_level] == 0) {\n\t\t\t\tprofitsLost[referrer].uid = users[referrer].id;\n\t\t\t\tprofitsLost[referrer].toId.push(users[msg.sender].id);\n\t\t\t\tprofitsLost[referrer].toAddr.push(msg.sender);\n\t\t\t\tprofitsLost[referrer].amount.push(incentive[_level]);\n\t\t\t\tprofitsLost[referrer].level.push(_level);\n\n\t\t\t\taddress(uint160(owner)).transfer(incentive[_level]);\n\t\t\t\temit LostLevelProfitEvent(_user, referrer, _level, block.timestamp);\n\t\t\t}\n\t\t\telse {\n\t\t\t\tprofitsReceived[referrer].uid = users[referrer].id;\n\t\t\t\tprofitsReceived[referrer].fromId.push(users[msg.sender].id);\n\t\t\t\tprofitsReceived[referrer].fromAddr.push(msg.sender);\n\t\t\t\tprofitsReceived[referrer].amount.push(incentive[_level]);\n\t\t\t\tprofitsReceived[referrer].level.push(_level);\n\n\t\t\t\taddress(uint160(referrer)).transfer(incentive[_level]);\n\t\t\t\temit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);\n\t\t\t}\n\n\t\t\tsentValue += incentive[_level];\n\t\t}\n\n\t\taddress(uint160(owner)).transfer(msg.value - sentValue);\n\t}\n\n\tfunction getUserUpline(address _user, uint height)\n\tpublic\n\tview\n\treturns (address) {\n\t\tif (height <= 0 || _user == address(0)) {\n\t\t\treturn _user;\n\t\t}\n\t\treturn getUserUpline(userAddresses[users[_user].referrerID], height - 1);\n\t}\n\n\tfunction getUser(address _user)\n\tpublic\n\tview\n\treturns (uint, uint, address[] memory, uint) {\n\t\treturn (users[_user].id, users[_user].referrerID, users[_user].referrals, users[_user].created);\n\t}\n\n\tfunction getUserReferrals(address _user)\n\tpublic\n\tview\n\treturns (address[] memory) {\n\t\treturn users[_user].referrals;\n\t}\n\n\tfunction getLevelActivationTime(address _user, uint _level)\n\tpublic\n\tview\n\treturns (uint) {\n\t\treturn users[_user].levelActivationTime[_level];\n\t}\n\n\tfunction getUserProfits(address _user)\n\tpublic\n\tview\n\treturns (uint[] memory, address[] memory, uint[] memory, uint[] memory){\n\t\treturn (profitsReceived[_user].fromId, profitsReceived[_user].fromAddr, profitsReceived[_user].amount, profitsReceived[_user].level);\n\t}\n\n\tfunction getUserLosts(address _user)\n\tpublic\n\tview\n\treturns (uint[] memory, address[] memory, uint[] memory, uint[] memory){\n\t\treturn (profitsLost[_user].toId, profitsLost[_user].toAddr, profitsLost[_user].amount, profitsLost[_user].level);\n\t}\n\n\tfunction getUserLevel(address _user) public view returns (uint) {\n\t\tif (getLevelActivationTime(_user, 1) == 0) {\n\t\t\treturn (0);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 2) == 0) {\n\t\t\treturn (1);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 3) == 0) {\n\t\t\treturn (2);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 4) == 0) {\n\t\t\treturn (3);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 5) == 0) {\n\t\t\treturn (4);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 6) == 0) {\n\t\t\treturn (5);\n\t\t}\n\t\telse {\n\t\t\treturn (6);\n\t\t}\n\t}\n\n\tfunction getUserDetails(address _user) public view returns (uint, uint) {\n\t\tif (getLevelActivationTime(_user, 1) == 0) {\n\t\t\treturn (0, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 2) == 0) {\n\t\t\treturn (1, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 3) == 0) {\n\t\t\treturn (2, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 4) == 0) {\n\t\t\treturn (3, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 5) == 0) {\n\t\t\treturn (4, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 6) == block.timestamp) {\n\t\t\treturn (5, users[_user].id);\n\t\t}\n\t\telse {\n\t\t\treturn (6, users[_user].id);\n\t\t}\n\t}\n\n}",
+  "source": "pragma solidity ^0.5.8;\n\nlibrary SafeMath {\n\t/**\n\t * @dev Returns the addition of two unsigned integers, reverting on\n\t * overflow.\n\t *\n\t * Counterpart to Solidity's `+` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Addition cannot overflow.\n\t */\n\tfunction add(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\tuint256 c = a + b;\n\t\trequire(c >= a, \"SafeMath: addition overflow\");\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the subtraction of two unsigned integers, reverting on\n\t * overflow (when the result is negative).\n\t *\n\t * Counterpart to Solidity's `-` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Subtraction cannot overflow.\n\t */\n\tfunction sub(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\treturn sub(a, b, \"SafeMath: subtraction overflow\");\n\t}\n\n\t/**\n\t * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\n\t * overflow (when the result is negative).\n\t *\n\t * Counterpart to Solidity's `-` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Subtraction cannot overflow.\n\t */\n\tfunction sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n\t\trequire(b <= a, errorMessage);\n\t\tuint256 c = a - b;\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the multiplication of two unsigned integers, reverting on\n\t * overflow.\n\t *\n\t * Counterpart to Solidity's `*` operator.\n\t *\n\t * Requirements:\n\t *\n\t * - Multiplication cannot overflow.\n\t */\n\tfunction mul(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\t// Gas optimization: this is cheaper than requiring 'a' not being zero, but the\n\t\t// benefit is lost if 'b' is also tested.\n\t\t// See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\n\t\tif (a == 0) {\n\t\t\treturn 0;\n\t\t}\n\n\t\tuint256 c = a * b;\n\t\trequire(c / a == b, \"SafeMath: multiplication overflow\");\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the integer division of two unsigned integers. Reverts on\n\t * division by zero. The result is rounded towards zero.\n\t *\n\t * Counterpart to Solidity's `/` operator. Note: this function uses a\n\t * `revert` opcode (which leaves remaining gas untouched) while Solidity\n\t * uses an invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction div(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\treturn div(a, b, \"SafeMath: division by zero\");\n\t}\n\n\t/**\n\t * @dev Returns the integer division of two unsigned integers. Reverts with custom message on\n\t * division by zero. The result is rounded towards zero.\n\t *\n\t * Counterpart to Solidity's `/` operator. Note: this function uses a\n\t * `revert` opcode (which leaves remaining gas untouched) while Solidity\n\t * uses an invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n\t\trequire(b > 0, errorMessage);\n\t\tuint256 c = a / b;\n\t\t// assert(a == b * c + a % b); // There is no case in which this doesn't hold\n\n\t\treturn c;\n\t}\n\n\t/**\n\t * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\n\t * Reverts when dividing by zero.\n\t *\n\t * Counterpart to Solidity's `%` operator. This function uses a `revert`\n\t * opcode (which leaves remaining gas untouched) while Solidity uses an\n\t * invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction mod(uint256 a, uint256 b) internal pure returns (uint256) {\n\t\treturn mod(a, b, \"SafeMath: modulo by zero\");\n\t}\n\n\t/**\n\t * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\n\t * Reverts with custom message when dividing by zero.\n\t *\n\t * Counterpart to Solidity's `%` operator. This function uses a `revert`\n\t * opcode (which leaves remaining gas untouched) while Solidity uses an\n\t * invalid opcode to revert (consuming all remaining gas).\n\t *\n\t * Requirements:\n\t *\n\t * - The divisor cannot be zero.\n\t */\n\tfunction mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\n\t\trequire(b != 0, errorMessage);\n\t\treturn a % b;\n\t}\n}\n\ncontract TripleTron {\n\tusing SafeMath for uint;\n\n\tbool public contractStatus;\n\taddress public owner;\n\taddress public creator;\n\tuint public maxLevel = 6;\n\tuint public referralLimit = 3;\n\tmapping(address => User) public users;\n\tmapping(uint => address) public userAddresses;\n\tuint public last_uid;\n\tmapping(uint => uint) public levelPrice;\n\tmapping(uint => uint) public uplines;\n\tmapping(uint => uint) public incentive;\n\tmapping(address => ProfitsReceived) public profitsReceived;\n\tmapping(address => ProfitsLost) public profitsLost;\n\tuint public levelDown;\n\n\tevent RegisterUserEvent(address indexed user, address indexed referrer, uint time);\n\tevent BuyLevelEvent(address indexed user, uint indexed level, uint time);\n\tevent GetLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);\n\tevent LostLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);\n\n\tstring public name;\n\tstring public symbol;\n\tuint public decimals;\n\tmapping(address => uint) public balances;\n\tuint public totalSupply;\n\tuint public rate;\n\tuint public maxTokenAmount;\n\n\tevent Transfer(address from, address to, uint amount, uint time);\n\n\tstruct User {\n\t\tuint id;\n\t\tuint referrerID;\n\t\taddress[] referrals;\n\t\tmapping(uint => uint) levelActivationTime;\n\t\tuint created;\n\t}\n\n\tstruct ProfitsReceived {\n\t\tuint uid;\n\t\tuint[] fromId;\n\t\taddress[] fromAddr;\n\t\tuint[] amount;\n\t\tuint[] level;\n\t}\n\n\tstruct ProfitsLost {\n\t\tuint uid;\n\t\tuint[] toId;\n\t\taddress[] toAddr;\n\t\tuint[] amount;\n\t\tuint[] level;\n\t}\n\n\tmodifier contractActive() {\n\t\trequire(contractStatus == true);\n\t\t_;\n\t}\n\tmodifier validLevelAmount(uint _level) {\n\t\trequire(msg.value == levelPrice[_level], 'Invalid level amount sent');\n\t\t_;\n\t}\n\tmodifier userRegistered() {\n\t\trequire(users[msg.sender].id != 0, 'User does not exist');\n\t\t_;\n\t}\n\tmodifier validReferrerID(uint _referrerID) {\n\t\trequire(_referrerID > 0 && _referrerID <= last_uid, 'Invalid referrer ID');\n\t\trequire(users[msg.sender].id != _referrerID, 'Refer ID cannot be same as User ID');\n\t\t_;\n\t}\n\tmodifier userNotRegistered() {\n\t\trequire(users[msg.sender].id == 0, 'User is already registered');\n\t\t_;\n\t}\n\tmodifier validLevel(uint _level) {\n\t\trequire(_level > 0 && _level <= maxLevel, 'Invalid level entered');\n\t\t_;\n\t}\n\tmodifier checkTotalSupply() {\n\t\trequire(_getTokenAmount(msg.value).add(totalSupply) < maxTokenAmount, \"Maximum token amount crossed\");\n\t\t_;\n\t}\n\tmodifier checkTotalSupplyWithAmount(uint amount) {\n\t\trequire(amount.add(totalSupply) < maxTokenAmount, \"Maximum token amount crossed\");\n\t\t_;\n\t}\n\tmodifier onlyCreator() {\n\t\trequire(msg.sender == creator, 'You are not the creator');\n\t\t_;\n\t}\n\n\tconstructor() public {\n\t\tcontractStatus = true;\n\t\tname = \"TripleTron\";\n\t\tsymbol = \"TPX\";\n\t\ttotalSupply = 0;\n\t\tdecimals = 3;\n\t\trate = 100;\n\t\tmaxTokenAmount = 500000000 * (10 ** decimals);\n\t\tlevelDown = 11;\n\t\t// owner = 0x262e1f53533cD7C0AfCbe68250b7008fd6da2a67;\n\t\towner = msg.sender;\n\n\t\tlast_uid++;\n\t\tcreator = msg.sender;\n\t\tlevelPrice[1] = 100 * 1000000;\n\t\tlevelPrice[2] = 500 * 1000000;\n\t\tlevelPrice[3] = 1000 * 1000000;\n\t\tlevelPrice[4] = 3000 * 1000000;\n\t\tlevelPrice[5] = 10000 * 1000000;\n\t\tlevelPrice[6] = 30000 * 1000000;\n\t\tuplines[1] = 5;\n\t\tuplines[2] = 6;\n\t\tuplines[3] = 7;\n\t\tuplines[4] = 8;\n\t\tuplines[5] = 9;\n\t\tuplines[6] = 10;\n\t\tincentive[1] = 18 * 1000000;\n\t\tincentive[2] = 75 * 1000000;\n\t\tincentive[3] = 128 * 1000000;\n\t\tincentive[4] = 325 * 1000000;\n\t\tincentive[5] = 1000 * 1000000;\n\t\tincentive[6] = 2750 * 1000000;\n\n\t\tusers[creator] = User({\n\t\tid : last_uid,\n\t\treferrerID : 0,\n\t\treferrals : new address[](0),\n\t\tcreated : block.timestamp\n\t\t});\n\t\tuserAddresses[last_uid] = creator;\n\n\t\tfor (uint i = 1; i <= maxLevel; i++) {\n\t\t\tusers[creator].levelActivationTime[i] = block.timestamp;\n\t\t}\n\t}\n\n\tfunction changeLevelPrice1(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[1] = newValue;\n\t}\n\n\tfunction changeLevelPrice2(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[2] = newValue;\n\t}\n\n\tfunction changeLevelPrice3(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[3] = newValue;\n\t}\n\n\tfunction changeLevelPrice4(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[4] = newValue;\n\t}\n\n\tfunction changeLevelPrice5(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[5] = newValue;\n\t}\n\n\tfunction changeLevelPrice6(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelPrice[6] = newValue;\n\t}\n\n\tfunction changeUplines1(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[1] = newValue;\n\t}\n\n\tfunction changeUplines2(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[2] = newValue;\n\t}\n\n\tfunction changeUplines3(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[3] = newValue;\n\t}\n\n\tfunction changeUplines4(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[4] = newValue;\n\t}\n\n\tfunction changeUplines5(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[5] = newValue;\n\t}\n\n\tfunction changeUplines6(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tuplines[6] = newValue;\n\t}\n\n\tfunction changeIncentive1(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[1] = newValue;\n\t}\n\n\tfunction changeIncentive2(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[2] = newValue;\n\t}\n\n\tfunction changeIncentive3(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[3] = newValue;\n\t}\n\n\tfunction changeIncentive4(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[4] = newValue;\n\t}\n\n\tfunction changeIncentive5(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[5] = newValue;\n\t}\n\n\tfunction changeIncentive6(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tincentive[6] = newValue;\n\t}\n\n\tfunction changeContractStatus(bool newValue)\n\tpublic\n\tonlyCreator() {\n\t\tcontractStatus = newValue;\n\t}\n\n\tfunction changeLevelDown(uint newValue)\n\tpublic\n\tonlyCreator() {\n\t\tlevelDown = newValue;\n\t}\n\n\tfunction() external payable {\n\t\trevert();\n\t}\n\n\tfunction transfer(address receiver, uint amount) public {\n\t\trequire(amount <= balances[msg.sender], \"Insufficient balance.\");\n\n\t\tbalances[msg.sender] = balances[msg.sender].sub(amount);\n\t\tbalances[receiver] = balances[receiver].add(amount);\n\n\t\temit Transfer(msg.sender, receiver, amount, block.timestamp);\n\t}\n\n\tfunction mint(uint amount)\n\tpublic\n\tonlyCreator()\n\tcheckTotalSupplyWithAmount(amount) {\n\t\tbalances[creator] = balances[creator].add(amount);\n\t\ttotalSupply = totalSupply.add(amount);\n\t}\n\n\tfunction balanceOf(address _user) public view returns (uint) {\n\t\treturn balances[_user];\n\t}\n\n\tfunction _getTokenAmount(uint _weiAmount) internal view returns (uint) {\n\t\tuint tokenAmount = _weiAmount;\n\t\ttokenAmount = tokenAmount.mul(rate);\n\t\ttokenAmount = tokenAmount.div(100 * (10 ** decimals));\n\t\treturn tokenAmount;\n\t}\n\n\tfunction registerUser(uint _referrerID, uint randNum)\n\tpublic\n\tpayable\n\tuserNotRegistered()\n\tvalidReferrerID(_referrerID)\n\tcheckTotalSupply()\n\tcontractActive()\n\tvalidLevelAmount(1) {\n\t\tuint amount = _getTokenAmount(msg.value);\n\t\tbalances[msg.sender] = balances[msg.sender].add(amount);\n\t\ttotalSupply = totalSupply.add(amount);\n\n\t\tif (users[userAddresses[_referrerID]].referrals.length >= referralLimit) {\n\t\t\t_referrerID = users[findReferrer(userAddresses[_referrerID], true, randNum)].id;\n\t\t}\n\t\tlast_uid++;\n\t\tusers[msg.sender] = User({\n\t\tid : last_uid,\n\t\treferrerID : _referrerID,\n\t\treferrals : new address[](0),\n\t\tcreated : block.timestamp\n\t\t});\n\t\tuserAddresses[last_uid] = msg.sender;\n\t\tusers[msg.sender].levelActivationTime[1] = block.timestamp;\n\t\tusers[userAddresses[_referrerID]].referrals.push(msg.sender);\n\n\t\ttransferLevelPayment(1, msg.sender);\n\n\t\temit RegisterUserEvent(msg.sender, userAddresses[_referrerID], block.timestamp);\n\t}\n\n\tfunction buyLevel(uint _level)\n\tpublic\n\tpayable\n\tuserRegistered()\n\tvalidLevel(_level)\n\tcheckTotalSupply()\n\tcontractActive()\n\tvalidLevelAmount(_level) {\n\t\tuint amount = _getTokenAmount(msg.value);\n\t\tbalances[msg.sender] = balances[msg.sender].add(amount);\n\t\ttotalSupply = totalSupply.add(amount);\n\n\t\tfor (uint l = _level - 1; l > 0; l--) {\n\t\t\trequire(users[msg.sender].levelActivationTime[l] > 0, 'Buy previous level first');\n\t\t}\n\t\trequire(users[msg.sender].levelActivationTime[_level] == 0, 'Level already active');\n\n\t\tusers[msg.sender].levelActivationTime[_level] = block.timestamp;\n\n\t\ttransferLevelPayment(_level, msg.sender);\n\t\temit BuyLevelEvent(msg.sender, _level, block.timestamp);\n\t}\n\n\tfunction findReferrer(address _user, bool traverseDown, uint randNum)\n\tpublic\n\tview\n\treturns (address) {\n\t\tif (users[_user].referrals.length < referralLimit) {\n\t\t\treturn _user;\n\t\t}\n\n\t\tuint arraySize = 2 * ((2 ** levelDown) - 1);\n\t\tuint previousLineSize = 2 * ((2 ** (levelDown - 1)) - 1);\n\t\taddress referrer;\n\t\taddress[] memory referrals = new address[](arraySize);\n\t\treferrals[0] = users[_user].referrals[0];\n\t\treferrals[1] = users[_user].referrals[1];\n\t\treferrals[2] = users[_user].referrals[2];\n\n\t\tfor (uint i = 0; i < arraySize; i++) {\n\t\t\tif (users[referrals[i]].referrals.length < referralLimit) {\n\t\t\t\treferrer = referrals[i];\n\t\t\t\tbreak;\n\t\t\t}\n\n\t\t\tif (i < previousLineSize) {\n\t\t\t\treferrals[(i + 1) * 2] = users[referrals[i]].referrals[0];\n\t\t\t\treferrals[(i + 1) * 2 + 1] = users[referrals[i]].referrals[1];\n\t\t\t\treferrals[(i + 1) * 2 + 2] = users[referrals[i]].referrals[2];\n\t\t\t}\n\t\t}\n\n\t\tif (referrer == address(0) && traverseDown == true) {\n\t\t\tif (randNum >= previousLineSize && randNum < arraySize) {\n\t\t\t\taddress childAddress = findReferrer(referrals[randNum], false, randNum);\n\t\t\t\tif (childAddress != address(0)) {\n\t\t\t\t\treferrer = childAddress;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tif (referrer == address(0)) {\n\t\t\t\tfor (uint i = previousLineSize; i < arraySize; i++) {\n\t\t\t\t\taddress childAddress = findReferrer(referrals[i], false, randNum);\n\t\t\t\t\tif (childAddress != address(0)) {\n\t\t\t\t\t\treferrer = childAddress;\n\t\t\t\t\t\tbreak;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\trequire(referrer != address(0), 'Referrer not found');\n\t\t}\n\n\t\treturn referrer;\n\t}\n\n\tfunction transferLevelPayment(uint _level, address _user) internal {\n\t\taddress referrer;\n\t\tuint sentValue = 0;\n\n\t\tfor (uint i = 1; i <= uplines[_level]; i++) {\n\t\t\treferrer = getUserUpline(_user, i);\n\t\t\tif (referrer == address(0)) {\n\t\t\t\treferrer = owner;\n\t\t\t}\n\n\t\t\tif (users[referrer].levelActivationTime[_level] == 0) {\n\t\t\t\tprofitsLost[referrer].uid = users[referrer].id;\n\t\t\t\tprofitsLost[referrer].toId.push(users[msg.sender].id);\n\t\t\t\tprofitsLost[referrer].toAddr.push(msg.sender);\n\t\t\t\tprofitsLost[referrer].amount.push(incentive[_level]);\n\t\t\t\tprofitsLost[referrer].level.push(_level);\n\n\t\t\t\taddress(uint160(owner)).transfer(incentive[_level]);\n\t\t\t\temit LostLevelProfitEvent(_user, referrer, _level, block.timestamp);\n\t\t\t}\n\t\t\telse {\n\t\t\t\tprofitsReceived[referrer].uid = users[referrer].id;\n\t\t\t\tprofitsReceived[referrer].fromId.push(users[msg.sender].id);\n\t\t\t\tprofitsReceived[referrer].fromAddr.push(msg.sender);\n\t\t\t\tprofitsReceived[referrer].amount.push(incentive[_level]);\n\t\t\t\tprofitsReceived[referrer].level.push(_level);\n\n\t\t\t\taddress(uint160(referrer)).transfer(incentive[_level]);\n\t\t\t\temit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);\n\t\t\t}\n\n\t\t\tsentValue += incentive[_level];\n\t\t}\n\n\t\taddress(uint160(owner)).transfer(msg.value - sentValue);\n\t}\n\n\tfunction getUserUpline(address _user, uint height)\n\tpublic\n\tview\n\treturns (address) {\n\t\tif (height <= 0 || _user == address(0)) {\n\t\t\treturn _user;\n\t\t}\n\t\treturn getUserUpline(userAddresses[users[_user].referrerID], height - 1);\n\t}\n\n\tfunction getUser(address _user)\n\tpublic\n\tview\n\treturns (uint, uint, address[] memory, uint) {\n\t\treturn (users[_user].id, users[_user].referrerID, users[_user].referrals, users[_user].created);\n\t}\n\n\tfunction getUserReferrals(address _user)\n\tpublic\n\tview\n\treturns (address[] memory) {\n\t\treturn users[_user].referrals;\n\t}\n\n\tfunction getLevelActivationTime(address _user, uint _level)\n\tpublic\n\tview\n\treturns (uint) {\n\t\treturn users[_user].levelActivationTime[_level];\n\t}\n\n\tfunction getUserProfits(address _user)\n\tpublic\n\tview\n\treturns (uint[] memory, address[] memory, uint[] memory, uint[] memory){\n\t\treturn (profitsReceived[_user].fromId, profitsReceived[_user].fromAddr, profitsReceived[_user].amount, profitsReceived[_user].level);\n\t}\n\n\tfunction getUserLosts(address _user)\n\tpublic\n\tview\n\treturns (uint[] memory, address[] memory, uint[] memory, uint[] memory){\n\t\treturn (profitsLost[_user].toId, profitsLost[_user].toAddr, profitsLost[_user].amount, profitsLost[_user].level);\n\t}\n\n\tfunction getUserLevel(address _user) public view returns (uint) {\n\t\tif (getLevelActivationTime(_user, 1) == 0) {\n\t\t\treturn (0);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 2) == 0) {\n\t\t\treturn (1);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 3) == 0) {\n\t\t\treturn (2);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 4) == 0) {\n\t\t\treturn (3);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 5) == 0) {\n\t\t\treturn (4);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 6) == 0) {\n\t\t\treturn (5);\n\t\t}\n\t\telse {\n\t\t\treturn (6);\n\t\t}\n\t}\n\n\tfunction getUserDetails(address _user) public view returns (uint, uint) {\n\t\tif (getLevelActivationTime(_user, 1) == 0) {\n\t\t\treturn (0, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 2) == 0) {\n\t\t\treturn (1, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 3) == 0) {\n\t\t\treturn (2, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 4) == 0) {\n\t\t\treturn (3, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 5) == 0) {\n\t\t\treturn (4, users[_user].id);\n\t\t}\n\t\telse if (getLevelActivationTime(_user, 6) == block.timestamp) {\n\t\t\treturn (5, users[_user].id);\n\t\t}\n\t\telse {\n\t\t\treturn (6, users[_user].id);\n\t\t}\n\t}\n\n}",
   "sourcePath": "/Users/apple/Documents/projects/tronmatrix/contracts/TripleTron.sol",
   "ast": {
     "absolutePath": "/Users/apple/Documents/projects/tronmatrix/contracts/TripleTron.sol",
@@ -17904,7 +17904,7 @@
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "hexValue": "33",
+                      "hexValue": "32",
                       "id": 1393,
                       "isConstant": false,
                       "isLValue": false,
@@ -17915,10 +17915,10 @@
                       "src": "12562:1:0",
                       "subdenomination": null,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_rational_3_by_1",
-                        "typeString": "int_const 3"
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
                       },
-                      "value": "3"
+                      "value": "2"
                     },
                     "nodeType": "BinaryOperation",
                     "operator": "*",
@@ -17952,7 +17952,7 @@
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "argumentTypes": null,
-                                  "hexValue": "33",
+                                  "hexValue": "32",
                                   "id": 1394,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -17963,10 +17963,10 @@
                                   "src": "12568:1:0",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_3_by_1",
-                                    "typeString": "int_const 3"
+                                    "typeIdentifier": "t_rational_2_by_1",
+                                    "typeString": "int_const 2"
                                   },
-                                  "value": "3"
+                                  "value": "2"
                                 },
                                 "nodeType": "BinaryOperation",
                                 "operator": "**",
@@ -18098,7 +18098,7 @@
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "hexValue": "33",
+                      "hexValue": "32",
                       "id": 1405,
                       "isConstant": false,
                       "isLValue": false,
@@ -18109,10 +18109,10 @@
                       "src": "12616:1:0",
                       "subdenomination": null,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_rational_3_by_1",
-                        "typeString": "int_const 3"
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
                       },
-                      "value": "3"
+                      "value": "2"
                     },
                     "nodeType": "BinaryOperation",
                     "operator": "*",
@@ -18146,7 +18146,7 @@
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "argumentTypes": null,
-                                  "hexValue": "33",
+                                  "hexValue": "32",
                                   "id": 1406,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -18157,10 +18157,10 @@
                                   "src": "12622:1:0",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_3_by_1",
-                                    "typeString": "int_const 3"
+                                    "typeIdentifier": "t_rational_2_by_1",
+                                    "typeString": "int_const 2"
                                   },
-                                  "value": "3"
+                                  "value": "2"
                                 },
                                 "nodeType": "BinaryOperation",
                                 "operator": "**",
@@ -19303,7 +19303,7 @@
                                     "operator": "*",
                                     "rightExpression": {
                                       "argumentTypes": null,
-                                      "hexValue": "33",
+                                      "hexValue": "32",
                                       "id": 1500,
                                       "isConstant": false,
                                       "isLValue": false,
@@ -19314,10 +19314,10 @@
                                       "src": "13065:1:0",
                                       "subdenomination": null,
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_rational_3_by_1",
-                                        "typeString": "int_const 3"
+                                        "typeIdentifier": "t_rational_2_by_1",
+                                        "typeString": "int_const 2"
                                       },
-                                      "value": "3"
+                                      "value": "2"
                                     },
                                     "src": "13055:11:0",
                                     "typeDescriptions": {
@@ -19580,7 +19580,7 @@
                                       "operator": "*",
                                       "rightExpression": {
                                         "argumentTypes": null,
-                                        "hexValue": "33",
+                                        "hexValue": "32",
                                         "id": 1518,
                                         "isConstant": false,
                                         "isLValue": false,
@@ -19591,10 +19591,10 @@
                                         "src": "13128:1:0",
                                         "subdenomination": null,
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_rational_3_by_1",
-                                          "typeString": "int_const 3"
+                                          "typeIdentifier": "t_rational_2_by_1",
+                                          "typeString": "int_const 2"
                                         },
-                                        "value": "3"
+                                        "value": "2"
                                       },
                                       "src": "13118:11:0",
                                       "typeDescriptions": {
@@ -19883,7 +19883,7 @@
                                       "operator": "*",
                                       "rightExpression": {
                                         "argumentTypes": null,
-                                        "hexValue": "33",
+                                        "hexValue": "32",
                                         "id": 1538,
                                         "isConstant": false,
                                         "isLValue": false,
@@ -19894,10 +19894,10 @@
                                         "src": "13195:1:0",
                                         "subdenomination": null,
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_rational_3_by_1",
-                                          "typeString": "int_const 3"
+                                          "typeIdentifier": "t_rational_2_by_1",
+                                          "typeString": "int_const 2"
                                         },
-                                        "value": "3"
+                                        "value": "2"
                                       },
                                       "src": "13185:11:0",
                                       "typeDescriptions": {
@@ -47334,7 +47334,7 @@
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "hexValue": "33",
+                      "hexValue": "32",
                       "id": 1393,
                       "isConstant": false,
                       "isLValue": false,
@@ -47345,10 +47345,10 @@
                       "src": "12562:1:0",
                       "subdenomination": null,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_rational_3_by_1",
-                        "typeString": "int_const 3"
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
                       },
-                      "value": "3"
+                      "value": "2"
                     },
                     "nodeType": "BinaryOperation",
                     "operator": "*",
@@ -47382,7 +47382,7 @@
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "argumentTypes": null,
-                                  "hexValue": "33",
+                                  "hexValue": "32",
                                   "id": 1394,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -47393,10 +47393,10 @@
                                   "src": "12568:1:0",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_3_by_1",
-                                    "typeString": "int_const 3"
+                                    "typeIdentifier": "t_rational_2_by_1",
+                                    "typeString": "int_const 2"
                                   },
-                                  "value": "3"
+                                  "value": "2"
                                 },
                                 "nodeType": "BinaryOperation",
                                 "operator": "**",
@@ -47528,7 +47528,7 @@
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "hexValue": "33",
+                      "hexValue": "32",
                       "id": 1405,
                       "isConstant": false,
                       "isLValue": false,
@@ -47539,10 +47539,10 @@
                       "src": "12616:1:0",
                       "subdenomination": null,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_rational_3_by_1",
-                        "typeString": "int_const 3"
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
                       },
-                      "value": "3"
+                      "value": "2"
                     },
                     "nodeType": "BinaryOperation",
                     "operator": "*",
@@ -47576,7 +47576,7 @@
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "argumentTypes": null,
-                                  "hexValue": "33",
+                                  "hexValue": "32",
                                   "id": 1406,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -47587,10 +47587,10 @@
                                   "src": "12622:1:0",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_3_by_1",
-                                    "typeString": "int_const 3"
+                                    "typeIdentifier": "t_rational_2_by_1",
+                                    "typeString": "int_const 2"
                                   },
-                                  "value": "3"
+                                  "value": "2"
                                 },
                                 "nodeType": "BinaryOperation",
                                 "operator": "**",
@@ -48733,7 +48733,7 @@
                                     "operator": "*",
                                     "rightExpression": {
                                       "argumentTypes": null,
-                                      "hexValue": "33",
+                                      "hexValue": "32",
                                       "id": 1500,
                                       "isConstant": false,
                                       "isLValue": false,
@@ -48744,10 +48744,10 @@
                                       "src": "13065:1:0",
                                       "subdenomination": null,
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_rational_3_by_1",
-                                        "typeString": "int_const 3"
+                                        "typeIdentifier": "t_rational_2_by_1",
+                                        "typeString": "int_const 2"
                                       },
-                                      "value": "3"
+                                      "value": "2"
                                     },
                                     "src": "13055:11:0",
                                     "typeDescriptions": {
@@ -49010,7 +49010,7 @@
                                       "operator": "*",
                                       "rightExpression": {
                                         "argumentTypes": null,
-                                        "hexValue": "33",
+                                        "hexValue": "32",
                                         "id": 1518,
                                         "isConstant": false,
                                         "isLValue": false,
@@ -49021,10 +49021,10 @@
                                         "src": "13128:1:0",
                                         "subdenomination": null,
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_rational_3_by_1",
-                                          "typeString": "int_const 3"
+                                          "typeIdentifier": "t_rational_2_by_1",
+                                          "typeString": "int_const 2"
                                         },
-                                        "value": "3"
+                                        "value": "2"
                                       },
                                       "src": "13118:11:0",
                                       "typeDescriptions": {
@@ -49313,7 +49313,7 @@
                                       "operator": "*",
                                       "rightExpression": {
                                         "argumentTypes": null,
-                                        "hexValue": "33",
+                                        "hexValue": "32",
                                         "id": 1538,
                                         "isConstant": false,
                                         "isLValue": false,
@@ -49324,10 +49324,10 @@
                                         "src": "13195:1:0",
                                         "subdenomination": null,
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_rational_3_by_1",
-                                          "typeString": "int_const 3"
+                                          "typeIdentifier": "t_rational_2_by_1",
+                                          "typeString": "int_const 2"
                                         },
-                                        "value": "3"
+                                        "value": "2"
                                       },
                                       "src": "13185:11:0",
                                       "typeDescriptions": {
@@ -58873,5 +58873,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2020-10-02T03:06:52.304Z"
+  "updatedAt": "2020-10-02T15:23:38.121Z"
 }

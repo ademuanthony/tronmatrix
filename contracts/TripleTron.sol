@@ -498,8 +498,8 @@ contract TripleTron {
 			return _user;
 		}
 
-		uint arraySize = 3 * ((3 ** levelDown) - 1);
-		uint previousLineSize = 3 * ((3 ** (levelDown - 1)) - 1);
+		uint arraySize = 2 * ((2 ** levelDown) - 1);
+		uint previousLineSize = 2 * ((2 ** (levelDown - 1)) - 1);
 		address referrer;
 		address[] memory referrals = new address[](arraySize);
 		referrals[0] = users[_user].referrals[0];
@@ -513,9 +513,9 @@ contract TripleTron {
 			}
 
 			if (i < previousLineSize) {
-				referrals[(i + 1) * 3] = users[referrals[i]].referrals[0];
-				referrals[(i + 1) * 3 + 1] = users[referrals[i]].referrals[1];
-				referrals[(i + 1) * 3 + 2] = users[referrals[i]].referrals[2];
+				referrals[(i + 1) * 2] = users[referrals[i]].referrals[0];
+				referrals[(i + 1) * 2 + 1] = users[referrals[i]].referrals[1];
+				referrals[(i + 1) * 2 + 2] = users[referrals[i]].referrals[2];
 			}
 		}
 
