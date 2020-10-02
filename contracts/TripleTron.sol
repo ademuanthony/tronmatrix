@@ -151,7 +151,6 @@ contract TripleTron {
 	address public creator;
 	uint public maxLevel = 6;
 	uint public referralLimit = 3;
-	uint public levelExpireTime = 90 days;
 	mapping(address => User) public users;
 	mapping(uint => address) public userAddresses;
 	uint public last_uid;
@@ -181,7 +180,7 @@ contract TripleTron {
 		uint id;
 		uint referrerID;
 		address[] referrals;
-		mapping(uint => uint) levelExpiresAt;
+		mapping(uint => uint) levelActivationTime;
 		uint created;
 	}
 
@@ -241,8 +240,8 @@ contract TripleTron {
 
 	constructor() public {
 		contractStatus = true;
-		name = "TronMatrix";
-		symbol = "TMX";
+		name = "TripleTron";
+		symbol = "TPX";
 		totalSupply = 0;
 		decimals = 3;
 		rate = 100;
@@ -251,27 +250,26 @@ contract TripleTron {
 		// owner = 0x262e1f53533cD7C0AfCbe68250b7008fd6da2a67;
 		owner = msg.sender;
 
-// 500, 3000, 20000, 100000, 250000, 500000
 		last_uid++;
 		creator = msg.sender;
-		levelPrice[1] = 500 * 1000000;
-		levelPrice[2] = 3000 * 1000000;
-		levelPrice[3] = 20000 * 1000000;
-		levelPrice[4] = 100000 * 1000000;
-		levelPrice[5] = 250000 * 1000000;
-		levelPrice[6] = 500000 * 1000000;
+		levelPrice[1] = 100 * 1000000;
+		levelPrice[2] = 500 * 1000000;
+		levelPrice[3] = 1000 * 1000000;
+		levelPrice[4] = 3000 * 1000000;
+		levelPrice[5] = 10000 * 1000000;
+		levelPrice[6] = 30000 * 1000000;
 		uplines[1] = 5;
 		uplines[2] = 6;
 		uplines[3] = 7;
 		uplines[4] = 8;
 		uplines[5] = 9;
 		uplines[6] = 10;
-		incentive[1] = 90 * 1000000;
-		incentive[2] = 450 * 1000000;
-		incentive[3] = 2550 * 1000000;
-		incentive[4] = 10825 * 1000000;
-		incentive[5] = 23750 * 1000000;
-		incentive[6] = 45225 * 1000000;
+		incentive[1] = 18 * 1000000;
+		incentive[2] = 75 * 1000000;
+		incentive[3] = 128 * 1000000;
+		incentive[4] = 325 * 1000000;
+		incentive[5] = 1000 * 1000000;
+		incentive[6] = 2750 * 1000000;
 
 		users[creator] = User({
 		id : last_uid,
@@ -282,7 +280,7 @@ contract TripleTron {
 		userAddresses[last_uid] = creator;
 
 		for (uint i = 1; i <= maxLevel; i++) {
-			users[creator].levelExpiresAt[i] = 1 << 37;
+			users[creator].levelActivationTime[i] = block.timestamp;
 		}
 	}
 
@@ -461,7 +459,7 @@ contract TripleTron {
 		created : block.timestamp
 		});
 		userAddresses[last_uid] = msg.sender;
-		users[msg.sender].levelExpiresAt[1] = block.timestamp + levelExpireTime;
+		users[msg.sender].levelActivationTime[1] = block.timestamp;
 		users[userAddresses[_referrerID]].referrals.push(msg.sender);
 
 		transferLevelPayment(1, msg.sender);
@@ -482,13 +480,11 @@ contract TripleTron {
 		totalSupply = totalSupply.add(amount);
 
 		for (uint l = _level - 1; l > 0; l--) {
-			require(getUserLevelExpiresAt(msg.sender, l) >= block.timestamp, 'Buy previous level first');
+			require(users[msg.sender].levelActivationTime[l] > 0, 'Buy previous level first');
 		}
-		if (getUserLevelExpiresAt(msg.sender, _level) == 0) {
-			users[msg.sender].levelExpiresAt[_level] = block.timestamp + levelExpireTime;
-		} else {
-			users[msg.sender].levelExpiresAt[_level] += levelExpireTime;
-		}
+		require(users[msg.sender].levelActivationTime[_level] == 0, 'Level already active');
+
+		users[msg.sender].levelActivationTime[_level] = block.timestamp;
 
 		transferLevelPayment(_level, msg.sender);
 		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
@@ -502,12 +498,13 @@ contract TripleTron {
 			return _user;
 		}
 
-		uint arraySize = 2 * ((2 ** levelDown) - 1);
-		uint previousLineSize = 2 * ((2 ** (levelDown - 1)) - 1);
+		uint arraySize = 3 * ((3 ** levelDown) - 1);
+		uint previousLineSize = 3 * ((3 ** (levelDown - 1)) - 1);
 		address referrer;
 		address[] memory referrals = new address[](arraySize);
 		referrals[0] = users[_user].referrals[0];
 		referrals[1] = users[_user].referrals[1];
+		referrals[2] = users[_user].referrals[2];
 
 		for (uint i = 0; i < arraySize; i++) {
 			if (users[referrals[i]].referrals.length < referralLimit) {
@@ -516,8 +513,9 @@ contract TripleTron {
 			}
 
 			if (i < previousLineSize) {
-				referrals[(i + 1) * 2] = users[referrals[i]].referrals[0];
-				referrals[(i + 1) * 2 + 1] = users[referrals[i]].referrals[1];
+				referrals[(i + 1) * 3] = users[referrals[i]].referrals[0];
+				referrals[(i + 1) * 3 + 1] = users[referrals[i]].referrals[1];
+				referrals[(i + 1) * 3 + 2] = users[referrals[i]].referrals[2];
 			}
 		}
 
@@ -554,7 +552,7 @@ contract TripleTron {
 				referrer = owner;
 			}
 
-			if (users[referrer].levelExpiresAt[_level] == 0 || users[referrer].levelExpiresAt[_level] < block.timestamp) {
+			if (users[referrer].levelActivationTime[_level] == 0) {
 				profitsLost[referrer].uid = users[referrer].id;
 				profitsLost[referrer].toId.push(users[msg.sender].id);
 				profitsLost[referrer].toAddr.push(msg.sender);
@@ -605,11 +603,11 @@ contract TripleTron {
 		return users[_user].referrals;
 	}
 
-	function getUserLevelExpiresAt(address _user, uint _level)
+	function getLevelActivationTime(address _user, uint _level)
 	public
 	view
 	returns (uint) {
-		return users[_user].levelExpiresAt[_level];
+		return users[_user].levelActivationTime[_level];
 	}
 
 	function getUserProfits(address _user)
@@ -627,22 +625,22 @@ contract TripleTron {
 	}
 
 	function getUserLevel(address _user) public view returns (uint) {
-		if (getUserLevelExpiresAt(_user, 1) < block.timestamp) {
+		if (getLevelActivationTime(_user, 1) == 0) {
 			return (0);
 		}
-		else if (getUserLevelExpiresAt(_user, 2) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 2) == 0) {
 			return (1);
 		}
-		else if (getUserLevelExpiresAt(_user, 3) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 3) == 0) {
 			return (2);
 		}
-		else if (getUserLevelExpiresAt(_user, 4) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 4) == 0) {
 			return (3);
 		}
-		else if (getUserLevelExpiresAt(_user, 5) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 5) == 0) {
 			return (4);
 		}
-		else if (getUserLevelExpiresAt(_user, 6) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 6) == 0) {
 			return (5);
 		}
 		else {
@@ -651,22 +649,22 @@ contract TripleTron {
 	}
 
 	function getUserDetails(address _user) public view returns (uint, uint) {
-		if (getUserLevelExpiresAt(_user, 1) < block.timestamp) {
+		if (getLevelActivationTime(_user, 1) == 0) {
 			return (0, users[_user].id);
 		}
-		else if (getUserLevelExpiresAt(_user, 2) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 2) == 0) {
 			return (1, users[_user].id);
 		}
-		else if (getUserLevelExpiresAt(_user, 3) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 3) == 0) {
 			return (2, users[_user].id);
 		}
-		else if (getUserLevelExpiresAt(_user, 4) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 4) == 0) {
 			return (3, users[_user].id);
 		}
-		else if (getUserLevelExpiresAt(_user, 5) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 5) == 0) {
 			return (4, users[_user].id);
 		}
-		else if (getUserLevelExpiresAt(_user, 6) < block.timestamp) {
+		else if (getLevelActivationTime(_user, 6) == block.timestamp) {
 			return (5, users[_user].id);
 		}
 		else {

@@ -323,81 +323,87 @@ function getUserDetails() {
 function buyLevelTrigger(level) {
 	switch (level) {
 		case 6:
-			contractGlobal.getUserLevelExpiresAt(sessionStorage.currentAccount, 6).call().then((result) => {
+			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 6).call().then((result) => {
+				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
-				var days = parseInt((dt - now) / (60 * 60 * 24 * 1000));
+				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
 				$('#level6').children().find('p').text("Active");
-				isOwner ? $('#level6').children().find('p.expire').text("") : $('#level6').children().find('p.expire').text(days + " days left");
+				isOwner ? $('#level6').children().find('p.expire').text("") : $('#level6').children().find('p.expire').text(days + " days ago");
 				$('#level6').children().addClass('buyLevelActivated');
 				$('#level6').addClass('bg-c-green')
 			}).catch((err) => {
-				console.error('Call for Level Expire Failed');
+				console.error('Call for Level Activation Time Failed');
 				console.log(err);
 			});
 		case 5:
-			contractGlobal.getUserLevelExpiresAt(sessionStorage.currentAccount, 5).call().then((result) => {
+			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 5).call().then((result) => {
+				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
-				var days = parseInt((dt - now) / (60 * 60 * 24 * 1000));
+				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
 				$('#level5').children().find('p').text("Active");
-				isOwner ? $('#level5').children().find('p.expire').text("") : $('#level5').children().find('p.expire').text(days + " days left");
+				isOwner ? $('#level5').children().find('p.expire').text("") : $('#level5').children().find('p.expire').text(days + " days ago");
 				$('#level5').children().addClass('buyLevelActivated');
 				$('#level5').addClass('bg-c-green')
 			}).catch((err) => {
-				console.error('Call for Level Expire Failed');
+				console.error('Call for Level Activation Time Failed');
 				console.log(err);
 			});
 		case 4:
-			contractGlobal.getUserLevelExpiresAt(sessionStorage.currentAccount, 4).call().then((result) => {
+			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 4).call().then((result) => {
+				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
-				var days = parseInt((dt - now) / (60 * 60 * 24 * 1000));
+				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
 				$('#level4').children().find('p').text("Active");
-				isOwner ? $('#level4').children().find('p.expire').text("") : $('#level4').children().find('p.expire').text(days + " days left");
+				isOwner ? $('#level4').children().find('p.expire').text("") : $('#level4').children().find('p.expire').text(days + " days ago");
 				$('#level4').children().addClass('buyLevelActivated');
 				$('#level4').addClass('bg-c-green')
 			}).catch((err) => {
-				console.error('Call for Level Expire Failed');
+				console.error('Call for Level Activation Time Failed');
 				console.log(err);
 			});
 		case 3:
-			contractGlobal.getUserLevelExpiresAt(sessionStorage.currentAccount, 3).call().then((result) => {
+			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 3).call().then((result) => {
+				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
-				var days = parseInt((dt - now) / (60 * 60 * 24 * 1000));
+				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
 				$('#level3').children().find('p').text("Active");
-				isOwner ? $('#level3').children().find('p.expire').text("") : $('#level3').children().find('p.expire').text(days + " days left");
+				isOwner ? $('#level3').children().find('p.expire').text("") : $('#level3').children().find('p.expire').text(days + " days ago");
 				$('#level3').children().addClass('buyLevelActivated');
 				$('#level3').addClass('bg-c-green')
 			}).catch((err) => {
-				console.error('Call for Level Expire Failed');
+				console.error('Call for Level Activation Time Failed');
 				console.log(err);
 			});
 		case 2:
-			contractGlobal.getUserLevelExpiresAt(sessionStorage.currentAccount, 2).call().then((result) => {
+			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 2).call().then((result) => {
+				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
-				var days = parseInt((dt - now) / (60 * 60 * 24 * 1000));
+				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
 				$('#level2').children().find('p').text("Active");
-				isOwner ? $('#level2').children().find('p.expire').text("") : $('#level2').children().find('p.expire').text(days + " days left");
+				isOwner ? $('#level2').children().find('p.expire').text("") : $('#level2').children().find('p.expire').text(days + " days ago");
 				$('#level2').children().addClass('buyLevelActivated');
 				$('#level2').addClass('bg-c-green')
 			}).catch((err) => {
-				console.error('Call for Level Expire Failed');
+				console.error('Call for Level Activation Time Failed');
 				console.log(err);
 			});
 		case 1:
-			contractGlobal.getUserLevelExpiresAt(sessionStorage.currentAccount, 1).call().then((result) => {
+			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 1).call().then((result) => {
+				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
-				var days = parseInt((dt - now) / (60 * 60 * 24 * 1000));
+				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
 				$('#level1').children().find('p').text("Active");
-				isOwner ? $('#level1').children().find('p.expire').text("") : $('#level1').children().find('p.expire').text(days + " days left");
+				isOwner ? $('#level1').children().find('p.expire').text("") : $('#level1').children().find('p.expire').text(days + " days ago");
 				$('#level1').children().addClass('buyLevelActivated');
 				$('#level1').addClass('bg-c-green')
 			}).catch((err) => {
-				console.error('Call for Level Expire Failed');
+				console.error('Call for Level Activation Time Failed');
 				console.log(err);
 			});
 		default:
