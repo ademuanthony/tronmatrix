@@ -1,7 +1,11 @@
 const multiplier = 1000000;
-const contractAddress = 'TGTRQZb2SPLtEgHYeYihcKVU48UvvDz2Wh'; // 4148c8f0e55886d5bc7d47f22759e68ed10107ee7f
-// const networkApi = 'https://api.shasta.trongrid.io/'
-const networkApi = 'https://api.trongrid.io/'
+const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
+const contractAddress = 'TR3z4JpJk2Ruvh5qWTNJuaxwqttRPBmdvB'
+const networkApi = 'https://api.shasta.trongrid.io/'
+
+// const contractAddress = 'TGTRQZb2SPLtEgHYeYihcKVU48UvvDz2Wh'
+// const ownerAddress = 'TQjV8oCVxqAVZxRRoUu7TJ8eSSmrWjKFtS'
+// const networkApi = 'https://api.trongrid.io/'
 
 let tronWebGlobal;
 let contractGlobal;
@@ -29,7 +33,7 @@ if (sessionStorage.isViewOnly === 'true') {
 			});
 		}
 		if (typeof sessionStorage.currentAccount === 'undefined' || sessionStorage.currentAccount === 'undefined') {
-			sessionStorage.currentAccount = 'TQjV8oCVxqAVZxRRoUu7TJ8eSSmrWjKFtS';
+			sessionStorage.currentAccount = ownerAddress;
 		}
 		await tronWebGlobal.setAddress(sessionStorage.currentAccount);
 		tronWebGlobal.contract().at(contractAddress).then((contract) => {
@@ -226,7 +230,7 @@ async function signup() {
 		showPopup('#fadeLoading', 'Signing up, please wait...');
 		contractGlobal.registerUser(refer, r).send({
 			feeLimit: 100000000,
-			callValue: 500 * multiplier
+			callValue: 100 * multiplier
 		}).then(async (receipt) => {
 			$('#fadeLoading').popup('hide');
 			showPopup('#fadeLoading', 'Waiting for the transaction to complete, please wait...');

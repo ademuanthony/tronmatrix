@@ -156,7 +156,7 @@ function getTotalUsers() {
 }
 
 function addEventsForLevelBuy(level) {
-	let price = [500, 3000, 20000, 100000, 250000, 500000];
+	let price = [100, 500, 1000, 3000, 10000, 30000];
 	let value = price[level - 1] * multiplier;
 
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');
