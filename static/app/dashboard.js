@@ -61,22 +61,22 @@ function getTotalEthProfit(price, ts) {
 			let level = event[i].result.level;
 			switch (level) {
 				case "1":
-					total += 90;
+					total += 18;
 					break;
 				case "2":
-					total += 205;
+					total += 75;
 					break;
 				case "3":
-					total += 1250;
+					total += 128;
 					break;
 				case "4":
-					total += 5550;
+					total += 325;
 					break;
 				case "5":
-					total += 12000;
+					total += 1000;
 					break;
 				case "6":
-					total += 23500
+					total += 2750
 					break;
 				default:
 			}
