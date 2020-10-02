@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/astaxie/beego"
 )
 
@@ -9,7 +11,12 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
-	c.TplName = "index.html"
+	var link = "/start"
+	if c.Ctx.Request.FormValue("refId") != "" {
+		link = fmt.Sprintf("%s?refId=%s", link, c.Ctx.Request.FormValue("refId"))
+	}
+	c.Data["startLink"] = link
+	c.TplName = "index-dark-particle-animation.html"
 }
 
 func (c *MainController) Start() {
