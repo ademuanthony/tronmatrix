@@ -1,0 +1,56 @@
+nano /etc/lighttpd/conf-available/surebankltd.com.conf
+
+$HTTP["host"] == "surebankltd.com" { #FDQN
+    server.document-root        = "/var/www/surebank/cmd/web-app/static"
+    accesslog.filename          = "/var/log/lighttpd/surebankltd.com_access.log" # Web server Access log file
+    server.errorlog             = "/var/log/lighttpd/surebankltd.com_error.log" # Web server Error log file
+    server.upload-dirs          = ( "/var/cache/lighttpd/uploads" )
+    server.pid-file             = "/var/run/lighttpd.pid"
+    server.username             = "www-data"
+    server.groupname            = "www-data"
+    server.port                 = 80
+
+    compress.cache-dir          = "/var/cache/lighttpd/compress/"
+    compress.filetype           = ( "application/javascript", "text/css", "text/html", "text/plain" )
+
+    $HTTP["url"] =~ "\.(jpg|gif|png|css|js)$" {
+        expire.url = ( "" => "access plus 2 months" )
+    }
+
+    $HTTP["url"] !~ "\.(js|css|gif|jpg|png|ico|swf|svg|ttf|woff|gz)$" {
+        proxy.server = (""    => (( "host" => "127.0.0.1", "port" => 3000)))
+    }
+
+    $SERVER["socket"] == ":443" {
+        ssl.engine              = "enable"
+        ssl.ca-file             = "/etc/letsencrypt/live/surebankltd.com/chain.pem"
+        ssl.pemfile             = "/etc/letsencrypt/live/surebankltd.com/merged.pem"
+    }
+
+    $HTTP["scheme"] == "http" {
+        $HTTP["host"] =~ ".*" {
+            url.redirect = (".*" => "https://%0$0")
+        }
+    }
+}
+
+mkdir -p /srv/htdocs/surebankltd.com/
+echo "This is Test Page on web1.itzgeek.local" > /srv/htdocs/surebankltd.com/index.html
+
+$HTTP["host"] == "surebankltd.com" { #FDQN
+
+    server.document-root = "/srv/htdocs/surebankltd.com/" # Document-root of the webserver
+    accesslog.filename = "/var/log/lighttpd/surebankltd.com_access.log" # Web server Access log file
+    server.errorlog = "/var/log/lighttpd/surebankltd.com_error.log" # Web server Error log file
+
+}
+
+sudo chown -R www-data:www-data /var/www/surebank/cmd/web-app/static/*
+ln -s /etc/lighttpd/conf-available/surebankltd.com.conf /etc/lighttpd/conf-enabled/surebankltd.com.conf
+
+
+certbot certonly --webroot -w /var/www/smarthead/cmd/web-app/static -d remoteschool.com.ng
+
+/etc/letsencrypt/live/remoteschool.com.ng-0001/fullchain.pem
+cat /etc/letsencrypt/live/remoteschool.com.ng/privkey.pem /etc/letsencrypt/live/remoteschool.com.ng/cert.pem > /etc/letsencrypt/live/remoteschool.com.ng/merged.pem
+
