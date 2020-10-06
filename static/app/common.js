@@ -336,6 +336,7 @@ function buyLevelTrigger(level) {
 				isOwner ? $('#level6').children().find('p.expire').text("") : $('#level6').children().find('p.expire').text(days + " days ago");
 				$('#level6').children().addClass('buyLevelActivated');
 				$('#level6').addClass('bg-c-green')
+				$('#level6Buy').hide()
 			}).catch((err) => {
 				console.error('Call for Level Activation Time Failed');
 				console.log(err);
@@ -350,6 +351,7 @@ function buyLevelTrigger(level) {
 				isOwner ? $('#level5').children().find('p.expire').text("") : $('#level5').children().find('p.expire').text(days + " days ago");
 				$('#level5').children().addClass('buyLevelActivated');
 				$('#level5').addClass('bg-c-green')
+				$('#level5Buy').hide()
 			}).catch((err) => {
 				console.error('Call for Level Activation Time Failed');
 				console.log(err);
@@ -364,6 +366,7 @@ function buyLevelTrigger(level) {
 				isOwner ? $('#level4').children().find('p.expire').text("") : $('#level4').children().find('p.expire').text(days + " days ago");
 				$('#level4').children().addClass('buyLevelActivated');
 				$('#level4').addClass('bg-c-green')
+				$('#level4Buy').hide()
 			}).catch((err) => {
 				console.error('Call for Level Activation Time Failed');
 				console.log(err);
@@ -378,6 +381,7 @@ function buyLevelTrigger(level) {
 				isOwner ? $('#level3').children().find('p.expire').text("") : $('#level3').children().find('p.expire').text(days + " days ago");
 				$('#level3').children().addClass('buyLevelActivated');
 				$('#level3').addClass('bg-c-green')
+				$('#level3Buy').hide()
 			}).catch((err) => {
 				console.error('Call for Level Activation Time Failed');
 				console.log(err);
@@ -392,6 +396,7 @@ function buyLevelTrigger(level) {
 				isOwner ? $('#level2').children().find('p.expire').text("") : $('#level2').children().find('p.expire').text(days + " days ago");
 				$('#level2').children().addClass('buyLevelActivated');
 				$('#level2').addClass('bg-c-green')
+				$('#level2Buy').hide()
 			}).catch((err) => {
 				console.error('Call for Level Activation Time Failed');
 				console.log(err);
@@ -406,6 +411,7 @@ function buyLevelTrigger(level) {
 				isOwner ? $('#level1').children().find('p.expire').text("") : $('#level1').children().find('p.expire').text(days + " days ago");
 				$('#level1').children().addClass('buyLevelActivated');
 				$('#level1').addClass('bg-c-green')
+				$('#level1Buy').hide()
 			}).catch((err) => {
 				console.error('Call for Level Activation Time Failed');
 				console.log(err);
