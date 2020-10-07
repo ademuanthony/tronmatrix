@@ -1,0 +1,9 @@
+[psql]
+    dbname = "tripletron"
+    host = "localhost"
+    user = "postgres"
+    pass = "docker"
+    sslmode = "disable"
+    whitelist=[
+        "profit",
+    ]
