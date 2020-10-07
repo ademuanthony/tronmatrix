@@ -26,8 +26,9 @@ type PgDb struct {
 var Instance *PgDb
 
 type ProfitEvent struct {
-	TransactionID string `json:"transaction_id"`
-	Result        struct {
+	TransactionID  string `json:"transaction_id"`
+	BlockTimestamp int64  `json:"block_timestamp"`
+	Result         struct {
 		Referral string `json:"referral"`
 		Level    int64  `json:"level,string"`
 		Time     int64  `json:"time,string"`
@@ -79,7 +80,7 @@ func (pg PgDb) InsertProfit(ctx context.Context, rec ProfitEvent) (bool, error) 
 		ReferralAddress: rec.Result.Referral,
 		UserAddress:     rec.Result.User,
 		Level:           rec.Result.Level,
-		Time:            rec.Result.Time,
+		Time:            rec.BlockTimestamp,
 		Amount:          rec.Result.Level * incentives[rec.Result.Level],
 	}
 	if err := profit.Insert(ctx, pg.db, boil.Infer()); err != nil {

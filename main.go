@@ -14,7 +14,6 @@ import (
 	_ "tronmatrix/routers"
 
 	"github.com/astaxie/beego"
-	"github.com/subosito/gotenv"
 )
 
 const (
@@ -39,15 +38,16 @@ func main() {
 		beego.BConfig.RunMode = os.Getenv("BEEGO_ENV")
 	}
 
-	gotenv.Load()
-	db, err := postgres.NewPgDb(false)
+	// gotenv.Load()
+	// db, err := postgres.NewPgDb(false)
 
-	if err != nil {
-		log.Fatalf("error in establishing database connection: %s", err.Error())
-	}
-	defer db.Close()
+	// if err != nil {
+	// 	log.Fatalf("error in establishing database connection: %s", err.Error())
+	// }
+	// defer db.Close()
 
-	go startPullingProfitEventLog()
+	// go startPullingProfitEventLog()
+
 	beego.Run()
 }
 

@@ -27,7 +27,7 @@ func (c *MainController) Start() {
 
 func (c *MainController) Dashboard() {
 	c.Data["adminActive"] = "active"
-	c.Data["Script"] = "/static/app/dashboard.js"
+	c.Data["Script"] = "/static/app/dashboard.js?v=0"
 	c.Layout = "layout.html"
 	c.TplName = "dashboard.html"
 }

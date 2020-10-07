@@ -14,6 +14,13 @@ $(document).ready(function () {
 	$('#earnedUSD').html(loader);
 	$('#idLevel').html(loader);
 	$('#idNum').html(loader);
+
+	$('#level1 .earnings').html(loader)
+	$('#level2 .earnings').html(loader)
+	$('#level3 .earnings').html(loader)
+	$('#level4 .earnings').html(loader)
+	$('#level5 .earnings').html(loader)
+	$('#level6 .earnings').html(loader)
 })
 	
 function init() {
@@ -34,13 +41,19 @@ function init() {
 
 function getUserProfitsAmount(price) {
 	contractGlobal.getUserProfits(sessionStorage.currentAccount).call().then((result) => {
-		let arr = result[2];
+		let profits = result[2];
+		let levels = result[3];
+		let levelProfits = [0, 0, 0, 0, 0, 0]
 		let sum = 0;
-		for (let i = 0; i < arr.length; i++) {
-			sum += parseInt(arr[i]);
+		for (let i = 0; i < profits.length; i++) {
+			sum += parseInt(profits[i]);
+			levelProfits[levels[i] - 1] += parseInt(profits[i])
 		}
 		sum /= multiplier;
 		$('#earnedEth').text(sum);
+		for (let i = 0; i < levelProfits.length; i++) {
+			$(`#level${i + 1} .earnings`).html(levelProfits[i] / multiplier)
+		}
 		let usd = price * sum;
 		$('#earnedUSD').text(usd.toFixed(2));
 	}).catch((err) => {
