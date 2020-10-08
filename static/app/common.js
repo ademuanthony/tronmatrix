@@ -211,17 +211,18 @@ async function previewMode() {
 }
 
 async function signup() {
+	let randomRef = Math.floor(Math.random() * 136) + 1;
 	if (typeof tronWebGlobal === 'undefined' || typeof tronWebGlobal.trx === 'undefined') {
 		showPopup('#fade', 'Tronlink wallet not found');
 	} else {
 		if (!isReferredLink) {
 			refer = $('#ref-addr').val();
 			if (refer === '') {
-				refer = 1;
+				refer = randomRef
 			}
 		} else {
 			if (refer === '') {
-				refer = $('#ref-addr').val() === '' ? 1 : $('#ref-addr').val();
+				refer = $('#ref-addr').val() === '' ? randomRef : $('#ref-addr').val();
 			}
 		}
 
@@ -239,7 +240,7 @@ async function signup() {
 				$('#fadeLoading').popup('hide');
 				if (typeof res.ret === 'undefined' || typeof res.ret[0].contractRet === 'undefined') {
 					showPopup('#fade', 'Sign-up failed.' +
-					' Please make sure that you have a minimum of 110 TRX for registration and network fee and try again');
+					' Please make sure that you have a minimum of 110 TRX for registration/network fee and try again');
 				} else {
 					if (res.ret[0].contractRet === 'REVERT') {
 						showPopup('#fade', 'Sign-up failed: Transaction was reversed');
@@ -254,7 +255,7 @@ async function signup() {
 						});
 					} else {
 						showPopup('#fade', 'Sign-up failed: Transaction status not recognized.' +
-							' Please make sure that you have a minimum of 110 TRX for registration and network fee and try again');
+							' Please make sure that you have a minimum of 110 TRX for registration/network fee and try again');
 					}
 				}
 			}).catch((err) => {
