@@ -238,7 +238,8 @@ async function signup() {
 				console.log(res)
 				$('#fadeLoading').popup('hide');
 				if (typeof res.ret === 'undefined' || typeof res.ret[0].contractRet === 'undefined') {
-					showPopup('#fade', 'Sign-up failed');
+					showPopup('#fade', 'Sign-up failed.' +
+					' Please make sure that you have a minimum of 110 TRX for registration and network fee and try again');
 				} else {
 					if (res.ret[0].contractRet === 'REVERT') {
 						showPopup('#fade', 'Sign-up failed: Transaction was reversed');
@@ -252,7 +253,8 @@ async function signup() {
 							console.log(err);
 						});
 					} else {
-						showPopup('#fade', 'Sign-up failed: Transaction status not recognized');
+						showPopup('#fade', 'Sign-up failed: Transaction status not recognized.' +
+							' Please make sure that you have a minimum of 110 TRX for registration and network fee and try again');
 					}
 				}
 			}).catch((err) => {
