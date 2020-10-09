@@ -243,6 +243,8 @@ async function signup() {
 					' Please make sure that you have a minimum of 110 TRX for registration/network fee and try again');
 				} else {
 					if (res.ret[0].contractRet === 'REVERT') {
+						// Revert may be because the user already have an account
+						
 						showPopup('#fade', 'Sign-up failed: Transaction was reversed');
 					} else if (res.ret[0].contractRet === 'SUCCESS') {
 						showPopup('#fade', 'Sign-up was successful!');
