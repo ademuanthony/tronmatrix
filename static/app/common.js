@@ -127,6 +127,10 @@ async function getAccount() {
 }
 
 async function loginButton() {
+	login()
+}
+
+async function login(msg) {
 	if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
 		tronWebGlobal = window.tronWeb;
 	} else {
@@ -143,10 +147,10 @@ async function loginButton() {
 				sessionStorage.isViewOnly = false;
 				window.location.href = '/dashboard';
 			} else {
-				showPopup('#fade', 'You are not registered');
+				showPopup('#fade', msg || 'You are not registered');
 			}
 		}).catch((err) => {
-			showPopup('#fade', 'Login failed');
+			showPopup('#fade', msg || 'Login failed');
 			console.log(err);
 		});
 	}).catch((err) => {
@@ -211,18 +215,18 @@ async function previewMode() {
 }
 
 async function signup() {
-	let randomRef = Math.floor(Math.random() * 136) + 1;
+	let globalRef = 1; // Math.floor(Math.random() * 136) + 1;
 	if (typeof tronWebGlobal === 'undefined' || typeof tronWebGlobal.trx === 'undefined') {
 		showPopup('#fade', 'Tronlink wallet not found');
 	} else {
 		if (!isReferredLink) {
 			refer = $('#ref-addr').val();
 			if (refer === '') {
-				refer = randomRef
+				refer = globalRef
 			}
 		} else {
 			if (refer === '') {
-				refer = $('#ref-addr').val() === '' ? randomRef : $('#ref-addr').val();
+				refer = $('#ref-addr').val() === '' ? globalRef : $('#ref-addr').val();
 			}
 		}
 
@@ -243,9 +247,8 @@ async function signup() {
 					' Please make sure that you have a minimum of 110 TRX for registration/network fee and try again');
 				} else {
 					if (res.ret[0].contractRet === 'REVERT') {
-						// Revert may be because the user already have an account
-						
-						showPopup('#fade', 'Sign-up failed: Transaction was reversed');
+						// Revert may be because the user already have an account. Let's try login
+						login('Sign-up failed: Transaction was reversed')
 					} else if (res.ret[0].contractRet === 'SUCCESS') {
 						showPopup('#fade', 'Sign-up was successful!');
 						getAccount().then(() => {
