@@ -36,7 +36,7 @@ Then, run the migration with:
     },
     development: {
       // For trontools/quickstart docker image
-      privateKey: 'da146374a75310b9666e834ee4ad0866d6f4035967bfc76217c5a495fff9f0d0',
+      privateKey: '7d5025f6115450894880905147c8281bb1fc4cba87915fe7c7f86ab675933273',
       userFeePercentage: 0,
       feeLimit: 1e8,
       fullHost: 'http://127.0.0.1:' + port,

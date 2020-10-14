@@ -1,5 +1,5 @@
-var Test = artifacts.require("./TripleTron.sol");
-contract('TripleTron', function(accounts) {
+var Test = artifacts.require("./TripleTronContract.sol");
+contract('TripleTronContract', function(accounts) {
         it("call method g", function() {
             Test.deployed().then(function(instance) {
                   return instance.call('g');
