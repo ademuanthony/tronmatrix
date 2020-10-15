@@ -1,11 +1,11 @@
 const multiplier = 1000000;
-// const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
-// const contractAddress = 'TRUWPHfY7uDy9aFYFtzYSGVGiw7Lr9LhsU'
-// const networkApi = 'https://api.shasta.trongrid.io/'
+const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
+const contractAddress = 'TQMR9EnszuFktQRGGytPDBmYVZX5JwEvLd'
+const networkApi = 'https://api.shasta.trongrid.io/'
 
-const contractAddress = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
-const ownerAddress = 'TQjV8oCVxqAVZxRRoUu7TJ8eSSmrWjKFtS'
-const networkApi = 'https://api.trongrid.io/'
+// const contractAddress = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
+// const ownerAddress = 'TQjV8oCVxqAVZxRRoUu7TJ8eSSmrWjKFtS'
+// const networkApi = 'https://api.trongrid.io/'
 
 let tronWebGlobal;
 let contractGlobal;

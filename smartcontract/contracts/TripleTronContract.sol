@@ -147,31 +147,33 @@ contract TripleTronContract {
 	using SafeMath for uint;
 
 	bool public contractStatus;
-	address public owner;
-	address public creator;
+	uint public created;
+	uint public levelDown;
+	uint public last_uid;
 	uint public maxLevel = 6;
 	uint public referralLimit = 3;
+	address public owner;
+	address public creator;
 	mapping(uint => mapping(address => User)) public users;
 	mapping(uint => address) public userAddresses;
-	uint public last_uid;
 	mapping(uint => uint) public levelPrice;
 	mapping(uint => uint) public uplines;
 	mapping(uint => uint) public incentive;
+	mapping(address => uint) public usersLevels;
 	mapping(address => ProfitsReceived) public profitsReceived;
-	uint public levelDown;
 
 	event RegisterUserEvent(address indexed user, address indexed referrer, uint time);
 	event BuyLevelEvent(address indexed user, uint indexed level, uint time);
 	event GetLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);
 	event LostLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);
 
-	string public name;
-	string public symbol;
 	uint public decimals;
-	mapping(address => uint) public balances;
 	uint public totalSupply;
 	uint public rate;
 	uint public maxTokenAmount;
+	string public name;
+	string public symbol;
+	mapping(address => uint) public balances;
 
 	event Transfer(address from, address to, uint amount, uint time);
 
@@ -239,6 +241,7 @@ contract TripleTronContract {
 		symbol = "TPX";
 		owner = _owner;
 		creator = msg.sender;
+		created = block.timestamp;
 		totalSupply = 0;
 		decimals = 3;
 		rate = 100;
@@ -265,7 +268,7 @@ contract TripleTronContract {
 		incentive[6] = 2750 * 1000000;
 
 		for (uint i = 1; i <= maxLevel; i++) {
-			users[1][creator] = User({
+			users[i][creator] = User({
 				id : last_uid,
 				referrerID : 0,
 				referrals : new address[](0),
@@ -273,6 +276,7 @@ contract TripleTronContract {
 			});
 		}
 		userAddresses[last_uid] = creator;
+		usersLevels[creator] = maxLevel;
 	}
 
 	function changeOwner(address newOwner) 
@@ -456,6 +460,7 @@ contract TripleTronContract {
 			created : block.timestamp
 		});
 		userAddresses[last_uid] = msg.sender;
+		usersLevels[msg.sender] = 1;
 		users[1][userAddresses[_referrerID]].referrals.push(msg.sender);
 
 		transferLevelPayment(1, msg.sender);
@@ -487,10 +492,46 @@ contract TripleTronContract {
 			referrals : new address[](0),
 			created : block.timestamp
 		});
+		usersLevels[msg.sender] = _level;
 		users[_level][userAddresses[_referrerID]].referrals.push(msg.sender);
 
 		transferLevelPayment(_level, msg.sender);
 		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
+	}
+
+	function insertV1User(uint _id, uint _referrerID, address _address, uint _created, 
+		mapping(uint => uint) _activatedLevels, ProfitReceived _profit, uint randNum) 
+	public
+	onlyCreator()
+	onlyOnFirstDay()
+	{
+		users[1][_address] = User({
+			id : _id,
+			referrerID : _referrerID,
+			referrals : new address[](0),
+			created : _created
+		});
+		userAddresses[_id] = _address;
+		usersLevels[_address] = _level;
+		users[1][userAddresses[_referrerID]].referrals.push(_address);
+		profitReceived[_address] = _profit;
+		emit RegisterUserEvent(_address, userAddresses[_referrerID], created);
+
+		for (uint l = 2; l <= maxLevel; l++) {
+			if (_activatedLevels[l] == 0) {
+				continue;
+			}
+			uint referrerID = users[l][findReferrer(userAddresses[1], l, true, randNum)].id;
+			users[l][_address] = User({
+				id : _id,
+				referrerID : referrerID,
+				referrals : new address[](0),
+				created : _activatedLevels[l]
+			});
+			usersLevels[_address] = l;
+			users[l][userAddresses[referrerID]].referrals.push(_address);
+			emit BuyLevelEvent(_address, l, _activatedLevels[l]);
+		}
 	}
 
 	function findReferrer(address _user, uint level, bool traverseDown, uint randNum)
@@ -580,18 +621,25 @@ contract TripleTronContract {
 		return getUserUpline(userAddresses[users[_level][_user].referrerID], _level, height - 1);
 	}
 
-	function getUser(address _user, uint level)
+	function getUser(address _user)
 	public
 	view
 	returns (uint, uint, address[] memory, uint) {
-		return (users[level][_user].id, users[level][_user].referrerID, users[level][_user].referrals, users[level][_user].created);
+		uint level = usersLevels[_user];
+		return (
+			users[level][_user].id, 
+			users[level][_user].referrerID, 
+			users[level][_user].referrals, 
+			users[level][_user].created
+		);
 	}
 
-	function getUserReferrals(address _user, uint level)
+	function getUserReferrals(address _user)
 	public
 	view
 	returns (address[] memory) {
-		return users[level][_user].referrals;
+
+		return users[usersLevels[_user]][_user].referrals;
 	}
 
 	function getLevelActivationTime(address _user, uint _level)
