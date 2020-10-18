@@ -549,7 +549,6 @@ contract TripleTronGlobal {
 			});
 			users[l][userAddresses[_refID]].referrals.push(userAddresses[last_uid]);
 
-			insertV1LevelPayment(l, userAddresses[last_uid]);
 			emit BuyLevelEvent(userAddresses[last_uid], l, _created);
 		}
 
