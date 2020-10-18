@@ -8,7 +8,7 @@ $(document).ready(function () {
 	$('#totalUsers').html(loader);
 	$('#totalEth').html(loader);
 	$('#totalUSD').html(loader);
-	$('#partnersUser').html(loader);
+	$('#directRecruit').html(loader);
 	$('#totalDay').html(loader);
 	$('#earnedEth').html(loader);
 	$('#earnedUSD').html(loader);
@@ -108,6 +108,9 @@ function getTotalEthProfit(price, ts) {
 }
 
 async function getUserReferrals(addr, depth) {
+	let directRecruit = await contractGlobal.getUserRecruit(addr).call();
+	$('#directRecruit').text(directRecruit)
+
 	let queue = [];
 	queue.push({
 		address: addr,
@@ -116,7 +119,7 @@ async function getUserReferrals(addr, depth) {
 
 	while (queue.length !== 0) {
 		let address = queue.pop();
-		let result = await contractGlobal.getUserReferrals(address.address).call();
+		let result = await contractGlobal.getUserReferrals(address.address, 1).call();
 
 		for (let i = 0; i < result.length; i++) {
 			if (address.level <= depth) {
@@ -124,7 +127,9 @@ async function getUserReferrals(addr, depth) {
 					address: result[i],
 					level: address.level + 1
 				});
-				referralArr.push(tronWebGlobal.address.fromHex(result[i]));
+				if (referralArr.indexOf(tronWebGlobal.address.fromHex(result[i])) === -1) {
+					referralArr.push(tronWebGlobal.address.fromHex(result[i]));
+				}
 			}
 		}
 	}
@@ -150,7 +155,7 @@ function displayNewPartners(ts) {
 				totalUsers24Hours += 1;
 			}
 		}
-		$('#partnersUser').text(referralArr.length + "/" + referral24Hours);
+		// $('#partnersUser').text(referralArr.length + "/" + referral24Hours);
 		$('#totalDay').text(totalUsers24Hours);
 		if (event.length === 200) {
 			let ts = event[199].timestamp;

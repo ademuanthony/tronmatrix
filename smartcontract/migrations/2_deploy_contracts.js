@@ -1,5 +1,5 @@
-var TripleTronContract = artifacts.require("./TripleTronContract.sol");
+var TripleTronGlobal = artifacts.require("./TripleTronGlobal.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(TripleTronContract, 'TUDxQVz6bJmoJoMqSMJzXwngfCK5JNqEX9');
+  deployer.deploy(TripleTronGlobal, 'TVHDieLGXH9Bz5Nfqcbs9R4nZjGnvAWQhc');
 };

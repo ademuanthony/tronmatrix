@@ -19,40 +19,40 @@ function getUserDetails1() {
 function getUserUpline(level) {
 	let ul = {};
 	level = (level > 6) ? 6 : level;
-	contractGlobal.getUserUpline(sessionStorage.currentAccount, 1).call(function (error, result) {
+	contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 1).call(function (error, result) {
 		ul[0] = result;
-		contractGlobal.getUserUpline(sessionStorage.currentAccount, 2).call(function (error, result) {
+		contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 2).call(function (error, result) {
 			ul[1] = result;
-			contractGlobal.getUserUpline(sessionStorage.currentAccount, 3).call(function (error, result) {
+			contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 3).call(function (error, result) {
 				ul[2] = result;
-				contractGlobal.getUserUpline(sessionStorage.currentAccount, 4).call(function (error, result) {
+				contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 4).call(function (error, result) {
 					ul[3] = result;
-					contractGlobal.getUserUpline(sessionStorage.currentAccount, 5).call(async function (error, result) {
+					contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 5).call(async function (error, result) {
 						ul[4] = result;
 						if (level === 1) {
 							await fillUplineData(ul, level);
 						} else if (level > 1) {
-							contractGlobal.getUserUpline(sessionStorage.currentAccount, 6).call(async function (error, result) {
+							contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 6).call(async function (error, result) {
 								ul[5] = result;
 								if (level === 2) {
 									await fillUplineData(ul, level);
 								} else if (level > 2) {
-									contractGlobal.getUserUpline(sessionStorage.currentAccount, 7).call(async function (error, result) {
+									contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 7).call(async function (error, result) {
 										ul[6] = result;
 										if (level === 3) {
 											await fillUplineData(ul, level);
 										} else if (level > 3) {
-											contractGlobal.getUserUpline(sessionStorage.currentAccount, 8).call(async function (error, result) {
+											contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 8).call(async function (error, result) {
 												ul[7] = result;
 												if (level === 4) {
 													await fillUplineData(ul, level);
 												} else if (level > 4) {
-													contractGlobal.getUserUpline(sessionStorage.currentAccount, 9).call(async function (error, result) {
+													contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 9).call(async function (error, result) {
 														ul[8] = result;
 														if (level === 5) {
 															await fillUplineData(ul, level);
 														} else if (level > 5) {
-															contractGlobal.getUserUpline(sessionStorage.currentAccount, 10).call(async function (error, result) {
+															contractGlobal.getUserUpline(sessionStorage.currentAccount, level, 10).call(async function (error, result) {
 																ul[9] = result;
 																await fillUplineData(ul, level);
 															}).catch((err) => {

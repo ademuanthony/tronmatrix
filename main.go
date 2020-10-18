@@ -72,7 +72,7 @@ func startPullingProfitEventLog() {
 			log.Println(err)
 		}
 		link := fmt.Sprintf("https://api.trongrid.io/v1/contracts/%s/events?event_name=GetLevelProfitEvent&min_block_timestamp=%d&order_by=block_timestamp%%2Casc",
-			"TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH", last)
+			"TKbVdYmpuV2jPrd9XPgVj3rWoQnuSSz1SQ", last)
 		if err := pullGetProfitEvents(ctx, link); err != nil {
 			log.Println(err)
 		}
