@@ -250,7 +250,7 @@ contract TripleTronGlobal {
 	}
 
 	constructor(address _owner) public {
-		contractStatus = true; // contract enabled after migration
+		contractStatus = false; // contract enabled after migration
 		name = "TripleTron";
 		symbol = "TPX";
 		owner = _owner;
