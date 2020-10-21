@@ -179,7 +179,8 @@ function addEventsForLevelBuy(level) {
 
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');
 
-	contractGlobal.buyLevel(level).send({
+	let r = String(randomIntFromInterval(2046, 4093));
+	contractGlobal.buyLevel(level, r).send({
 		feeLimit: 100000000,
 		callValue: value
 	}).then(async function (receipt) {
