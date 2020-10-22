@@ -22,7 +22,8 @@ func (c *MainController) Get() {
 func (c *MainController) Start() {
 	c.Data["Website"] = "beego.me"
 	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "start.html"
+	// c.TplName = "start.html"
+	c.TplName = "signup-dark.html"
 }
 
 func (c *MainController) Dashboard() {
