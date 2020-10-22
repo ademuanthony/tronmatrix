@@ -197,7 +197,7 @@ function addEventsForLevelBuy(level) {
 					showPopup('#fade', 'Congratulation! You have purchased a new Level ' + level + ' contract!');
 					getUserDetails();
 				} else {
-					showPopup('#fade', 'Transaction failed: Transaction status not recognized');
+					showPopup('#fade', 'Transaction failed: Make sure you have enough balance to cover upgrade and network fee then try again');
 				}
 			}
 		}).catch((err) => {
