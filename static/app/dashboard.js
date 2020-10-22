@@ -194,7 +194,8 @@ function addEventsForLevelBuy(level) {
 				if (res.ret[0].contractRet === 'REVERT') {
 					showPopup('#fade', 'Transaction failed: Transaction was reversed');
 				} else if (res.ret[0].contractRet === 'SUCCESS') {
-					showPopup('#fade', 'Congratulation! You have purchased a new Level ' + level + ' contract!');
+					showPopup('#fade', 'Congratulation! You have purchased a new Level ' + level +
+						' contract! Note that you must have ' + level * 3 + ' direct referral to earn at this level');
 					getUserDetails();
 				} else {
 					showPopup('#fade', 'Transaction failed: Make sure you have enough balance to cover upgrade and network fee then try again');
