@@ -8,7 +8,7 @@ $(document).ready(function () {
 	$('#totalUsers').html(loader);
 	$('#totalEth').html(loader);
 	$('#totalUSD').html(loader);
-	$('#directRecruit').html(loader);
+	$('#partnersUser').html(loader);
 	$('#totalDay').html(loader);
 	$('#earnedEth').html(loader);
 	$('#earnedUSD').html(loader);
@@ -36,6 +36,7 @@ function init() {
 	getUserDetails();
 	getTotalUsers();
 	getUserReferrals(sessionStorage.currentAccount, 10);
+	getUserDirectReferrals()
 	createBuyEvents();
 }
 
@@ -57,7 +58,19 @@ function getUserProfitsAmount(price) {
 		let usd = price * sum;
 		$('#earnedUSD').text(usd.toFixed(2));
 	}).catch((err) => {
-		console.error('Call for User Profits Failed');
+		console.error('Call for User Direct Referrals Failed');
+		console.log(err);
+	});
+}
+
+function getUserDirectReferrals() {
+	contractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
+		for (let i = 0; i < result.length; i++) {
+			if (parseInt(result[i]._hex) == 0) continue
+			$(`#level${i + 1} .direct-referrals`).html(`${parseInt(result[i]._hex)} direct referrals`)
+		}
+	}).catch((err) => {
+		console.error('Call for User Direct Referral Failed');
 		console.log(err);
 	});
 }
@@ -143,7 +156,6 @@ function displayNewPartners(ts) {
 		sinceTimestamp: ts,
 		size: 200
 	}).then((event) => {
-		console.log(event);
 		let yesterday = (new Date().getTime() / 1000) - 86400;
 
 		for (let i = 0; i < event.length; i++) {
@@ -155,7 +167,7 @@ function displayNewPartners(ts) {
 				totalUsers24Hours += 1;
 			}
 		}
-		// $('#partnersUser').text(referralArr.length + "/" + referral24Hours);
+		$('#partnersUser').text(referralArr.length + "/" + referral24Hours);
 		$('#totalDay').text(totalUsers24Hours);
 		if (event.length === 200) {
 			let ts = event[199].timestamp;
@@ -179,8 +191,7 @@ function addEventsForLevelBuy(level) {
 
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');
 
-	let r = String(randomIntFromInterval(2046, 4093));
-	contractGlobal.buyLevel(level, r).send({
+	contractGlobal.buyLevel(level).send({
 		feeLimit: 100000000,
 		callValue: value
 	}).then(async function (receipt) {

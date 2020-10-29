@@ -1,13 +1,13 @@
 const multiplier = 1000000;
-// const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
+const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
 // const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
-// const contractAddress = 'TVWLmkqyxcdJDoysMMjz4pWDaHkFJ4mJne'
-// const networkApi = 'https://api.shasta.trongrid.io/'
+const contractAddress = 'TPWCL2vsJsJineFrPmKZTmZ7jcXcD7y8im'
+const networkApi = 'https://api.shasta.trongrid.io/'
 
-const contractAddress = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
-// const oldContractAddress = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
-const ownerAddress = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
-const networkApi = 'https://api.trongrid.io/'
+// const contractAddress = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
+// // const oldContractAddress.1 = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
+// const ownerAddress = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
+// const networkApi = 'https://api.trongrid.io/'
 
 let tronWebGlobal;
 let contractGlobal;
@@ -40,8 +40,6 @@ if (sessionStorage.isViewOnly === 'true') {
 		await tronWebGlobal.setAddress(sessionStorage.currentAccount);
 		tronWebGlobal.contract().at(contractAddress).then((contract) => {
 			contractGlobal = contract;
-			window.contract = contract
-			window.acc = sessionStorage.currentAccount
 			_init(sessionStorage.currentAccount)
 			if (typeof init === 'function') {
 				init();
@@ -344,7 +342,7 @@ function buyLevelTrigger(level) {
 				var dt = new Date(result * 1000);
 				var now = new Date();
 				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
-				$('#level6').children().find('p').text("Active");
+				$('#level6').children().find('p.status').text("Active");
 				isOwner ? $('#level6').children().find('p.expire').text("") : $('#level6').children().find('p.expire').text(days + " days ago");
 				$('#level6').children().addClass('buyLevelActivated');
 				$('#level6').addClass('bg-c-green')
@@ -359,7 +357,7 @@ function buyLevelTrigger(level) {
 				var dt = new Date(result * 1000);
 				var now = new Date();
 				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
-				$('#level5').children().find('p').text("Active");
+				$('#level5').children().find('p.status').text("Active");
 				isOwner ? $('#level5').children().find('p.expire').text("") : $('#level5').children().find('p.expire').text(days + " days ago");
 				$('#level5').children().addClass('buyLevelActivated');
 				$('#level5').addClass('bg-c-green')
@@ -374,7 +372,7 @@ function buyLevelTrigger(level) {
 				var dt = new Date(result * 1000);
 				var now = new Date();
 				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
-				$('#level4').children().find('p').text("Active");
+				$('#level4').children().find('p.status').text("Active");
 				isOwner ? $('#level4').children().find('p.expire').text("") : $('#level4').children().find('p.expire').text(days + " days ago");
 				$('#level4').children().addClass('buyLevelActivated');
 				$('#level4').addClass('bg-c-green')
@@ -389,7 +387,7 @@ function buyLevelTrigger(level) {
 				var dt = new Date(result * 1000);
 				var now = new Date();
 				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
-				$('#level3').children().find('p').text("Active");
+				$('#level3').children().find('p.status').text("Active");
 				isOwner ? $('#level3').children().find('p.expire').text("") : $('#level3').children().find('p.expire').text(days + " days ago");
 				$('#level3').children().addClass('buyLevelActivated');
 				$('#level3').addClass('bg-c-green')
@@ -404,7 +402,7 @@ function buyLevelTrigger(level) {
 				var dt = new Date(result * 1000);
 				var now = new Date();
 				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
-				$('#level2').children().find('p').text("Active");
+				$('#level2').children().find('p.status').text("Active");
 				isOwner ? $('#level2').children().find('p.expire').text("") : $('#level2').children().find('p.expire').text(days + " days ago");
 				$('#level2').children().addClass('buyLevelActivated');
 				$('#level2').addClass('bg-c-green')
@@ -419,7 +417,7 @@ function buyLevelTrigger(level) {
 				var dt = new Date(result * 1000);
 				var now = new Date();
 				var days = parseInt((now - dt) / (60 * 60 * 24 * 1000));
-				$('#level1').children().find('p').text("Active");
+				$('#level1').children().find('p.status').text("Active");
 				isOwner ? $('#level1').children().find('p.expire').text("") : $('#level1').children().find('p.expire').text(days + " days ago");
 				$('#level1').children().addClass('buyLevelActivated');
 				$('#level1').addClass('bg-c-green')

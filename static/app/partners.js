@@ -22,7 +22,6 @@ async function makeRoot(depth) {
 	showPopup('#fadeLoading', 'Please wait while the data is loading!');
 	try {
 		let rootUser = await contractGlobal.getUser(sessionStorage.currentAccount, levelID).call();
-		console.log(rootUser)
 		let rootUserDetails = await contractGlobal.getUserDetails(sessionStorage.currentAccount).call();
 		rootUser['id'] = rootUser[0];
 		rootUser['depth'] = 1;
@@ -41,7 +40,8 @@ async function makeRoot(depth) {
 					childUser['id'] = childUser[0];
 					childUser['depth'] = currentUser['depth'] + 1;
 					childUser['parentId'] = childUser[1];
-					childUser['name'] = childUser[0] + "(Lev - " + childUserDetails[0] + ")";
+					let highlight = childUser[2] == sessionStorage.currentAccount ? " dd" : ""
+					childUser['name'] = childUser[0] + highlight + "(Lev - " + childUserDetails[0] + ")";
 					rootArray.push(childUser);
 					rootList.push(childUser);
 				}
