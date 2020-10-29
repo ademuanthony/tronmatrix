@@ -1,7 +1,7 @@
 const multiplier = 1000000;
 const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
 // const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
-const contractAddress = 'TPWCL2vsJsJineFrPmKZTmZ7jcXcD7y8im'
+const contractAddress = 'TDiJDdKVdPmTdxuPtT28py9EXs6oeVUAW2'
 const networkApi = 'https://api.shasta.trongrid.io/'
 
 // const contractAddress = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
@@ -232,15 +232,15 @@ async function signup() {
 			}
 		}
 
-		let r = String(randomIntFromInterval(2046, 4093));
+		let r = String(randomIntFromInterval(350, 720));
 
 		showPopup('#fadeLoading', 'Signing up, please wait...');
 		contractGlobal.registerUser(refer, r).send({
-			feeLimit: 100000000,
+			feeLimit: 20000000,
 			callValue: 100 * multiplier
 		}).then(async (receipt) => {
 			$('#fadeLoading').popup('hide');
-			showPopup('#fadeLoading', 'Waiting for the transaction to complete, please wait...');
+			showPopup('#fadeLoading', 'Submitted! Waiting for confirmation, please wait...');
 			checkTransactionStatus(receipt, 0).then(async (res) => {
 				console.log(res)
 				$('#fadeLoading').popup('hide');

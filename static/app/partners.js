@@ -40,8 +40,9 @@ async function makeRoot(depth) {
 					childUser['id'] = childUser[0];
 					childUser['depth'] = currentUser['depth'] + 1;
 					childUser['parentId'] = childUser[1];
-					let highlight = childUser[2] == sessionStorage.currentAccount ? " dd" : ""
-					childUser['name'] = childUser[0] + highlight + "(Lev - " + childUserDetails[0] + ")";
+					let add = tronWebGlobal.address.fromHex(childUserDetails[2])
+					childUser["direct"] = add == sessionStorage.currentAccount
+					childUser['name'] = childUser[0] + "(Lev - " + childUserDetails[0] + ")";
 					rootArray.push(childUser);
 					rootList.push(childUser);
 				}
@@ -152,7 +153,8 @@ function makeChart() {
 			.attr("stroke", "black")
 			.attr("stroke-width", 1)
 			.style("fill", function (d) {
-				return d._children ? "lightsteelblue" : "#fff";
+				return d.direct ? (d._children ? "green" : "lightgreen") : d._children ? "lightblue" : "#fff"
+				// return d._children && d.direct ? "lightgreen" : d._children ? "lightsteelblue" : "#fff";
 			});
 
 		nodeEnter.append("text")
@@ -177,7 +179,7 @@ function makeChart() {
 			.attr("stroke", "black")
 			.attr("stroke-width", 1)
 			.style("fill", function (d) {
-				return d._children ? "lightsteelblue" : "#fff";
+				return d.direct ? (d._children ? "green" : "lightgreen") : d._children ? "lightblue" : "#fff"
 			});
 
 		nodeUpdate.select("text")

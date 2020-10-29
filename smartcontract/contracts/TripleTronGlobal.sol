@@ -250,12 +250,12 @@ contract TripleTronGlobal {
 		_;
 	}
 	modifier onlyForUpgrade() {
-		require(last_uid <= 600, 'The last id has past the v1 last id');
+		require(last_uid <= 1000, 'The last id has past the v1 last id');
 		_;
 	}
 
 	constructor(address _owner) public {
-		contractStatus = false; // contract enabled after migration
+		contractStatus = true;
 		name = "TripleTron";
 		symbol = "TPX";
 		owner = _owner;
@@ -265,7 +265,7 @@ contract TripleTronGlobal {
 		decimals = 3;
 		rate = 100;
 		maxTokenAmount = 500000000 * (10 ** decimals);
-		levelDown = 11;
+		levelDown = 5;
 		uint multiplier = 1000000;
 		levelPrice[1] = 100 * multiplier;
 		levelPrice[2] = 500 * multiplier;
@@ -293,7 +293,7 @@ contract TripleTronGlobal {
 		earningCondition[6] = 3;
 
 		last_uid++;
-		for (uint i = last_uid; i <= maxLevel; i++) {
+		for (uint i = 1; i <= maxLevel; i++) {
 			users[i][creator] = User({
 				id : last_uid,
 				referrerID : 0,
@@ -303,6 +303,10 @@ contract TripleTronGlobal {
 				created : block.timestamp
 			});
 			directReferrals[i][last_uid] = maxLevel * 3;
+			if (i > 1) {
+				paymentQueue[i].push(last_uid);
+
+			}
 		}
 		
 		userAddresses[last_uid] = creator;
@@ -526,7 +530,7 @@ contract TripleTronGlobal {
 		require(users[_level][msg.sender].id == 0, 'Level already active');
 
 		directReferrals[_level][users[1][msg.sender].sponsorID]++;
-		uint _referrerID = getUserToPay(_level, paymentQueue[_level][paymentCursor[_level]]);
+		uint _referrerID = getUserToPay(_level);
 		
 		users[_level][msg.sender] = User({
 			id : users[1][msg.sender].id,
@@ -543,15 +547,19 @@ contract TripleTronGlobal {
 		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
 	}
 
-	function getUserToPay(uint _level, uint _default) internal returns(uint) {
+	function getUserToPay(uint _level) internal returns(uint) {
+		uint _default;
 		for(uint i = paymentCursor[_level]; i < paymentQueue[_level].length; i++) {
 			uint userID = paymentQueue[_level][paymentCursor[_level]];
 			if(users[_level][userAddresses[userID]].referrals.length >= referralLimit) {
 				paymentCursor[_level]++;
 				continue;
 			}
+			// default to the first free account
+			if(_default == 0) {
+				_default = userID;
+			}
 			if (canReceiveLevelPayment(userID, _level)) {
-				paymentCursor[_level]++;
 				return userID;
 			}
 			(paymentQueue[_level][i], paymentQueue[_level][paymentCursor[_level]]) = (paymentQueue[_level][paymentCursor[_level]], paymentQueue[_level][i]);
@@ -559,6 +567,10 @@ contract TripleTronGlobal {
 		// the last person on the queue is now ocupying the first position. let's move him back
 		paymentQueue[_level].push(paymentQueue[_level][paymentCursor[_level]]);
 		paymentCursor[_level]++;
+		// 22950
+		// 40050 => 
+		// 150200 => 30% => platinum
+		// 405000 => 120,000 => 30%
 
 		return _default;
 	}
