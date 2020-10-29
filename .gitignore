@@ -4,5 +4,6 @@ smartcontract/build
 smartcontract/.env
 
 tronmatrix
+tripletron
 node_modules
 static/dist/*

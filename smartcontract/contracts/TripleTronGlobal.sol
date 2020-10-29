@@ -159,8 +159,11 @@ contract TripleTronGlobal {
 	mapping(uint => uint) public levelPrice;
 	mapping(uint => uint) public uplines;
 	mapping(uint => uint) public incentive;
-	mapping(uint => uint) public directReferrals;
+	mapping(uint => mapping(uint => uint)) public directReferrals;
 	mapping(address => uint) public usersLevels;
+	mapping(uint => uint[]) paymentQueue;
+	mapping(uint => uint) paymentCursor;
+	mapping(uint => uint) earningCondition;
 	mapping(address => ProfitsReceived) public profitsReceived;
 	mapping(address => ProfitsLost) public profitsLost;
 
@@ -182,7 +185,9 @@ contract TripleTronGlobal {
 	struct User {
 		uint id;
 		uint referrerID;
+		uint sponsorID;
 		address[] referrals;
+		address[] directReferrals;
 		mapping(uint => uint) levelActivationTime;
 		uint created;
 	}
@@ -279,17 +284,26 @@ contract TripleTronGlobal {
 		incentive[4] = 325 * 1000000;
 		incentive[5] = 1000 * 1000000;
 		incentive[6] = 2750 * 1000000;
+		earningCondition[1] = 0;
+		earningCondition[2] = 3;
+		earningCondition[3] = 3;
+		earningCondition[4] = 3;
+		earningCondition[5] = 3;
+		earningCondition[6] = 3;
 
 		last_uid++;
 		for (uint i = last_uid; i <= maxLevel; i++) {
 			users[i][creator] = User({
 				id : last_uid,
 				referrerID : 0,
+				sponsorID: 0,
 				referrals : new address[](0),
+				directReferrals : new address[](0),
 				created : block.timestamp
 			});
+			directReferrals[i][last_uid] = maxLevel * 3;
 		}
-		directReferrals[last_uid] = maxLevel * 3;
+		
 		userAddresses[last_uid] = creator;
 		usersLevels[creator] = maxLevel;
 	}
@@ -408,6 +422,10 @@ contract TripleTronGlobal {
 		incentive[6] = newValue;
 	}
 
+	function changeEarningCondition(uint _level, uint value) public onlyCreator() {
+		earningCondition[_level] = value;
+	}
+
 	function changeContractStatus(bool newValue)
 	public
 	onlyCreator() {
@@ -464,7 +482,9 @@ contract TripleTronGlobal {
 		balances[msg.sender] = balances[msg.sender].add(amount);
 		totalSupply = totalSupply.add(amount);
 
-		directReferrals[_referrerID] += 1;
+		directReferrals[1][_referrerID] += 1;
+		users[1][userAddresses[_referrerID]].directReferrals.push(msg.sender);
+		uint sponsorID = _referrerID;
 		if (users[1][userAddresses[_referrerID]].referrals.length >= referralLimit) {
 			_referrerID = users[1][findReferrer(userAddresses[_referrerID], 1, true, randNum)].id;
 		}
@@ -472,7 +492,9 @@ contract TripleTronGlobal {
 		users[1][msg.sender] = User({
 			id : last_uid,
 			referrerID : _referrerID,
+			sponsorID: sponsorID,
 			referrals : new address[](0),
+			directReferrals : new address[](0),
 			created : block.timestamp
 		});
 
@@ -502,22 +524,50 @@ contract TripleTronGlobal {
 		}
 		require(users[_level][msg.sender].id == 0, 'Level already active');
 
-		uint _referrerID = users[_level][findReferrer(userAddresses[1], _level, true, randNum)].id;
+		directReferrals[_level][users[1][msg.sender].sponsorID]++;
+		uint _referrerID = getUserToPay(_level, paymentQueue[_level].length, paymentQueue[_level][paymentCursor[_level]]);
+		
 		users[_level][msg.sender] = User({
 			id : users[1][msg.sender].id,
+			sponsorID: users[1][msg.sender].sponsorID,
 			referrerID : _referrerID,
 			referrals : new address[](0),
+			directReferrals: new address[](0),
 			created : block.timestamp
 		});
 		usersLevels[msg.sender] = _level;
 		users[_level][userAddresses[_referrerID]].referrals.push(msg.sender);
-
+		paymentQueue[_level][paymentCursor[_level]].push(msg.sender)
 		transferLevelPayment(_level, msg.sender);
 		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
 	}
 
+	function getUserToPay(uint _level, uint _default) internal returns(uint) {
+		for(uint i = paymentCursor[_level]; i < paymentQueue[_level].length; i++) {
+			uint userID = paymentQueue[_level][paymentCursor[_level]];
+			if(users[_level][userAddresses[userID]].referrals.length >= referralLimit) {
+				paymentCursor[_level]++;
+				continue;
+			}
+			if (canReceiveLevelPayment(userID, _level)) {
+				paymentCursor[_level]++;
+				return userID;
+			}
+			paymentQueue[_level][i], paymentQueue[_level][paymentCursor[_level]] = paymentQueue[_level][paymentCursor[_level]], paymentQueue[_level][i];
+		}
+		// the last person on the queue is now ocupying the first position. let's move him back
+		paymentQueue[_level].push(paymentQueue[_level][paymentCursor[_level]]);
+		paymentCursor[_level]++;
 
-	function insertV1User(address _user, uint _id, uint _referrerID, uint _created, uint _level, uint randNum) 
+		return _default;
+	}
+
+	function canReceiveLevelPayment(uint _userID, uint _level) internal returns (bool){
+		return directReferrals[_level][_userID] >= earningCondition[_level];
+	}
+
+
+	function insertV1User(address _user, uint _id, uint _referrerID, uint _created, uint _level, uint cumDirectDownlines, uint randNum) 
 	public
 	onlyCreator()
 	onlyForUpgrade()
@@ -526,34 +576,60 @@ contract TripleTronGlobal {
 		if (users[1][userAddresses[_referrerID]].referrals.length >= referralLimit) {
 			_referrerID = users[1][findReferrer(userAddresses[_referrerID], 1, true, randNum)].id;
 		}
-		last_uid = _id;
+		if (_id > last_uid) {
+			last_uid = _id;
+		}
+		
 		users[1][_user] = User({
-			id : last_uid,
+			id : _id,
 			referrerID : _referrerID,
+			sponsorID: _referrerID,
 			referrals : new address[](0),
+			directReferrals : new address[](0),
 			created : _created
 		});
-		userAddresses[last_uid] = _user;
-		users[1][userAddresses[_referrerID]].referrals.push(userAddresses[last_uid]);
+		userAddresses[_id] = _user;
+		users[1][userAddresses[_referrerID]].referrals.push(userAddresses[_id]);
+		directReferrals[1][_referrerID]++;
 
-		insertV1LevelPayment(1, userAddresses[last_uid]);
-		emit RegisterUserEvent(userAddresses[last_uid], userAddresses[_referrerID], _created);
+		insertV1LevelPayment(1, userAddresses[_id]);
+		emit RegisterUserEvent(userAddresses[_id], userAddresses[_referrerID], _created);
 
 		for (uint l = 2; l <= _level; l++) {
 			uint _refID = users[l][findReferrer(userAddresses[1], l, true, randNum)].id;
-			users[l][userAddresses[last_uid]] = User({
-				id : last_uid,
+			users[l][userAddresses[_id]] = User({
+				id : _id,
 				referrerID : _refID,
+				sponsorID: _referrerID,
 				referrals : new address[](0),
+				directReferrals : new address[](0),
 				created : _created
 			});
-			users[l][userAddresses[_refID]].referrals.push(userAddresses[last_uid]);
-
-			emit BuyLevelEvent(userAddresses[last_uid], l, _created);
+			users[l][userAddresses[_refID]].referrals.push(userAddresses[_id]);
+			paymentQueue[l].push(_id);
+			if (cumDirectDownlines/3 >= l) {
+				directReferrals[l][_id] = 3;
+			}
+			emit BuyLevelEvent(userAddresses[_id], l, _created);
 		}
 
-		usersLevels[userAddresses[last_uid]] = _level;
-		directReferrals[_id] = (_level - 1) * 3;
+		usersLevels[userAddresses[_id]] = _level;
+	}
+
+	function updateDirectReferralCount() public onlyCreator() onlyForUpdate() {
+		for(uint id = 1; id <= last_uid; id++) {
+			for (uint level = 1; level <= maxLevel; level++) {
+				if (directReferrals[level][id] == 0) {
+					uint count;
+					for(uint i = 0; i < users[1][userAddresses[id]].referrals.length; i++) {
+						if(users[level][users[1][userAddresses[id]].referrals[i]].created > 0) {
+							count++;
+						}
+					}
+				}
+				directReferrals[level][id] = count;
+			}
+		}
 	}
 
 	function findReferrer(address _user, uint level, bool traverseDown, uint randNum)
@@ -564,8 +640,8 @@ contract TripleTronGlobal {
 			return _user;
 		}
 
-		uint arraySize = 2 * ((2 ** levelDown) - 1);
-		uint previousLineSize = 2 * ((2 ** (levelDown - 1)) - 1);
+		uint arraySize = 3 * ((3 ** levelDown) - 1);
+		uint previousLineSize = 3 * ((3 ** (levelDown - 1)) - 1);
 		address referrer;
 		address[] memory referrals = new address[](arraySize);
 		referrals[0] = users[level][_user].referrals[0];
@@ -579,9 +655,9 @@ contract TripleTronGlobal {
 			}
 
 			if (i < previousLineSize) {
-				referrals[(i + 1) * 2] = users[level][referrals[i]].referrals[0];
-				referrals[(i + 1) * 2 + 1] = users[level][referrals[i]].referrals[1];
-				referrals[(i + 1) * 2 + 2] = users[level][referrals[i]].referrals[2];
+				referrals[(i + 1) * 3] = users[level][referrals[i]].referrals[0];
+				referrals[(i + 1) * 3 + 1] = users[level][referrals[i]].referrals[1];
+				referrals[(i + 1) * 3 + 2] = users[level][referrals[i]].referrals[2];
 			}
 		}
 
@@ -617,7 +693,7 @@ contract TripleTronGlobal {
 			if (referrer == address(0)) {
 				referrer = owner;
 			}
-			if (directReferrals[users[_level][referrer].id] >= (_level - 1) * 3) {
+			if (canReceiveLevelPayment(users[1][referrer].id, _level)) {
 				profitsReceived[referrer].uid = users[_level][referrer].id;
 				profitsReceived[referrer].fromId.push(users[_level][msg.sender].id);
 				profitsReceived[referrer].fromAddr.push(msg.sender);
