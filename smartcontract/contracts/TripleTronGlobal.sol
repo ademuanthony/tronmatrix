@@ -603,6 +603,7 @@ contract TripleTronGlobal {
 		});
 		userAddresses[_id] = _user;
 		users[1][userAddresses[_referrerID]].referrals.push(userAddresses[_id]);
+		users[1][userAddresses[_referrerID]].directReferrals.push(userAddresses[_id]);
 		directReferrals[1][_referrerID]++;
 
 		insertV1LevelPayment(1, userAddresses[_id]);
@@ -733,7 +734,6 @@ contract TripleTronGlobal {
 
 	function insertV1LevelPayment(uint _level, address _user) internal {
 		address referrer;
-		uint sentValue = 0;
 
 		for (uint i = 1; i <= uplines[_level]; i++) {
 			referrer = getUserUpline(_user, _level, i);
@@ -748,8 +748,6 @@ contract TripleTronGlobal {
 			profitsReceived[referrer].level.push(_level);
 
 			emit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);
-
-			sentValue += incentive[_level];
 		}
 	}
 

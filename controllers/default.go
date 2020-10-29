@@ -26,6 +26,13 @@ func (c *MainController) Start() {
 	c.TplName = "signup-dark.html"
 }
 
+func (c *MainController) Login() {
+	c.Data["Website"] = "beego.me"
+	c.Data["Email"] = "astaxie@gmail.com"
+	// c.TplName = "start.html"
+	c.TplName = "login-dark.html"
+}
+
 func (c *MainController) Dashboard() {
 	c.Data["adminActive"] = "active"
 	c.Data["Script"] = "/static/app/dashboard.js?v=4"

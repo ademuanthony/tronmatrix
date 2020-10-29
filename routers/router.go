@@ -8,6 +8,7 @@ import (
 func init() {
     beego.Router("/", &controllers.MainController{})
 	beego.Router("/start",&controllers.MainController{},"*:Start")
+	beego.Router("/login",&controllers.MainController{},"*:Login")
 	beego.Router("/dashboard",&controllers.MainController{},"*:Dashboard")
 	beego.Router("/team",&controllers.MainController{},"*:MyTeam")
 	beego.Router("/upline",&controllers.MainController{},"*:Upline")
