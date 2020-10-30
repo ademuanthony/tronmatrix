@@ -575,7 +575,16 @@ contract TripleTronGlobal {
 		return _default;
 	}
 
-	function canReceiveLevelPayment(uint _userID, uint _level) internal view returns (bool){
+	function canReceiveLevelPayment(uint _userID, uint _level) internal returns (bool){
+		if (directReferrals[_level][_userID] == 0) {
+			uint count;
+			for(uint i = 0; i < users[1][userAddresses[_userID]].referrals.length; i++){
+				if (users[_level][users[1][userAddresses[_userID]].referrals[i]].id > 0) {
+					count ++;
+				}
+			}
+			directReferrals[_level][_userID] = count;
+		}
 		return directReferrals[_level][_userID] >= earningCondition[_level];
 	}
 
