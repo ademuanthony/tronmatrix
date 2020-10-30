@@ -12,6 +12,7 @@ $(document).ready(function () {
 	$('#totalDay').html(loader);
 	$('#earnedEth').html(loader);
 	$('#earnedUSD').html(loader);
+	$('#directReferrals').html(loader);
 	$('#idLevel').html(loader);
 	$('#idNum').html(loader);
 
@@ -68,6 +69,9 @@ function getUserDirectReferrals() {
 		for (let i = 0; i < result.length; i++) {
 			if (parseInt(result[i]._hex) == 0) continue
 			$(`#level${i + 1} .direct-referrals`).html(`${parseInt(result[i]._hex)} direct referrals`)
+			if (i + 1 == 1) {
+				$('#directReferrals').html(parseInt(result[i]._hex))
+			}
 		}
 	}).catch((err) => {
 		console.error('Call for User Direct Referral Failed');

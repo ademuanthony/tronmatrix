@@ -153,7 +153,7 @@ function makeChart() {
 			.attr("stroke", "black")
 			.attr("stroke-width", 1)
 			.style("fill", function (d) {
-				return d.direct ? (d._children ? "green" : "lightgreen") : d._children ? "lightblue" : "#fff"
+				return d.direct ? (d._children ? "#f50057" : "#ff4081") : d._children ? "lightblue" : "#fff"
 				// return d._children && d.direct ? "lightgreen" : d._children ? "lightsteelblue" : "#fff";
 			});
 
@@ -179,7 +179,7 @@ function makeChart() {
 			.attr("stroke", "black")
 			.attr("stroke-width", 1)
 			.style("fill", function (d) {
-				return d.direct ? (d._children ? "green" : "lightgreen") : d._children ? "lightblue" : "#fff"
+				return d.direct ? (d._children ? "#f50057" : "#ff4081") : d._children ? "lightblue" : "#fff"
 			});
 
 		nodeUpdate.select("text")
