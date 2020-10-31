@@ -217,7 +217,7 @@ function addEventsForLevelBuy(level) {
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');
 
 	contractGlobal.buyLevel(level).send({
-		feeLimit: 20000000,
+		feeLimit: 35000000,
 		callValue: value
 	}).then(async function (receipt) {
 		$('#fadeLoading').popup('hide');
