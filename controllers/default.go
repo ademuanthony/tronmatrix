@@ -45,7 +45,7 @@ func (c *MainController) Login() {
 
 func (c *MainController) Dashboard() {
 	c.Data["adminActive"] = "active"
-	c.Data["Script"] = "/static/app/dashboard.js?v=2.3"
+	c.Data["Script"] = "/static/app/dashboard.js?v=2.4"
 	c.Layout = "layout.html"
 	c.TplName = "dashboard.html"
 }

@@ -79,19 +79,14 @@ async function getUserDirectReferrals(addr) {
 
 	contractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
 		for (let i = 0; i < result.length; i++) {
-			if (parseInt(result[i]._hex) == 0) {
-				if (referralsCount[i] > 0) {
-					$(`#level${i + 1} .direct-referrals`).html(`${referralsCount[i]} direct referrals`)
-					if (i + 1 == 1) {
-						$('#directReferrals').html(parseInt(referralsCount[i]))
-					}
-				}
-				continue
+			if (parseInt(result[i]._hex) > 0) {
+				referralsCount[i] += parseInt(result[i]._hex)
 			}
-			console.log(parseInt(result[i]._hex))
-			$(`#level${i + 1} .direct-referrals`).html(`${parseInt(result[i]._hex)} direct referrals`)
+			if (referralsCount[i] > 0) {
+				$(`#level${i + 1} .direct-referrals`).html(`${referralsCount[i]} direct referrals`)
+			}
 			if (i + 1 == 1) {
-				$('#directReferrals').html(parseInt(result[i]._hex))
+				$('#directReferrals').html(parseInt(referralsCount[i]))
 			}
 		}
 	}).catch((err) => {
