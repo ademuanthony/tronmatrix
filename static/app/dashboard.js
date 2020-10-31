@@ -64,10 +64,31 @@ function getUserProfitsAmount(price) {
 	});
 }
 
-function getUserDirectReferrals() {
+async function getUserDirectReferrals(addr) {
+	var referrals = await contractGlobal.getUserReferrals(sessionStorage.currentAccount, 1).call();
+	var referralsCount = [0, 0, 0, 0, 0, 0]
+	for (let i = 0; i < referrals.length; i++) {
+		var result = await contractGlobal.getUserDetails(referrals[i]).call()
+		let level = parseInt(result[0]._hex);
+		for (let l = 0; l < 6; l++) {
+			if (level >= l + 1) {
+				referralsCount[l]++
+			}
+		}
+	}
+
 	contractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
 		for (let i = 0; i < result.length; i++) {
-			if (parseInt(result[i]._hex) == 0) continue
+			if (parseInt(result[i]._hex) == 0) {
+				if (referralsCount[i] > 0) {
+					$(`#level${i + 1} .direct-referrals`).html(`${referralsCount[i]} direct referrals`)
+					if (i + 1 == 1) {
+						$('#directReferrals').html(parseInt(referralsCount[i]))
+					}
+				}
+				continue
+			}
+			console.log(parseInt(result[i]._hex))
 			$(`#level${i + 1} .direct-referrals`).html(`${parseInt(result[i]._hex)} direct referrals`)
 			if (i + 1 == 1) {
 				$('#directReferrals').html(parseInt(result[i]._hex))
