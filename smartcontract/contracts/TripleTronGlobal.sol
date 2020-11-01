@@ -163,6 +163,8 @@ contract TripleTronGlobal {
 	mapping(address => uint) public usersLevels;
 	mapping(uint => uint[]) paymentQueue;
 	mapping(uint => uint) paymentCursor;
+	mapping(uint => uint) currentPaymentCount;
+	mapping(uint => uint) insertCursor;
 	mapping(uint => uint) earningCondition;
 	mapping(address => ProfitsReceived) public profitsReceived;
 	mapping(address => ProfitsLost) public profitsLost;
@@ -186,6 +188,7 @@ contract TripleTronGlobal {
 		uint id;
 		uint referrerID;
 		uint sponsorID;
+		uint position;
 		address[] referrals;
 		address[] directReferrals;
 		mapping(uint => uint) levelActivationTime;
@@ -298,6 +301,7 @@ contract TripleTronGlobal {
 				id : last_uid,
 				referrerID : 0,
 				sponsorID: 0,
+				position: 0,
 				referrals : new address[](0),
 				directReferrals : new address[](0),
 				created : block.timestamp
@@ -498,6 +502,7 @@ contract TripleTronGlobal {
 			id : last_uid,
 			referrerID : _referrerID,
 			sponsorID: sponsorID,
+			position: 0,
 			referrals : new address[](0),
 			directReferrals : new address[](0),
 			created : block.timestamp
@@ -528,54 +533,51 @@ contract TripleTronGlobal {
 			require(users[l][msg.sender].id > 0, 'Buy previous level first');
 		}
 		require(users[_level][msg.sender].id == 0, 'Level already active');
+		require(canUpgrade(_level, users[1][msg.sender].id), "You are not qualified to upgrade to this level");
 
 		directReferrals[_level][users[1][msg.sender].sponsorID]++;
-		uint _referrerID = getUserToPay(_level);
-		
-		users[_level][msg.sender] = User({
-			id : users[1][msg.sender].id,
-			sponsorID: users[1][msg.sender].sponsorID,
-			referrerID : _referrerID,
+		usersLevels[msg.sender] = _level;
+		if (directReferrals[_level][users[1][msg.sender].sponsorID] == earningCondition[_level]) {
+			// insert to matrix and payment queue
+			addToGlobalPool(userAddresses[directReferrals[_level][users[1][msg.sender].sponsorID]], _level);
+		}
+
+		if(directReferrals[_level][users[1][msg.sender].id] >= earningCondition[_level]) {
+			// and to matrix and payment queue
+			addToGlobalPool(msg.sender, _level);
+		}
+		transferGlobalLevelPayment(_level, msg.sender);
+		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
+	}
+
+	function addToGlobalPool(address _user, uint _level) internal {
+		address parentAddr = getNextGlobalUpline(_level);
+		users[_level][parentAddr].referrals.push(_user);
+		users[_level][_user] = User({
+			id : users[1][_user].id,
+			sponsorID: users[1][_user].sponsorID,
+			referrerID : users[1][parentAddr].id,
+			position: paymentQueue[_level].length,
 			referrals : new address[](0),
 			directReferrals: new address[](0),
 			created : block.timestamp
 		});
-		usersLevels[msg.sender] = _level;
-		users[_level][userAddresses[_referrerID]].referrals.push(msg.sender);
-		paymentQueue[_level].push(users[1][msg.sender].id);
-		transferLevelPayment(_level, msg.sender);
-		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
+		paymentQueue[_level].push(users[1][_user].id);
 	}
 
-	function getUserToPay(uint _level) internal returns(uint) {
-		uint _default;
-		for(uint i = paymentCursor[_level]; i < paymentQueue[_level].length; i++) {
-			uint userID = paymentQueue[_level][paymentCursor[_level]];
-			if(users[_level][userAddresses[userID]].referrals.length >= referralLimit) {
-				paymentCursor[_level]++;
-				continue;
-			}
-			// default to the first free account
-			if(_default == 0) {
-				_default = userID;
-			}
-			if (canReceiveLevelPayment(userID, _level)) {
-				return userID;
-			}
-			(paymentQueue[_level][i], paymentQueue[_level][paymentCursor[_level]]) = (paymentQueue[_level][paymentCursor[_level]], paymentQueue[_level][i]);
+	function getNextGlobalUpline(uint _level) internal returns(address) {
+		uint userID = paymentQueue[_level][insertCursor[_level]];
+		if (users[_level][userAddresses[userID]].referrals.length >= referralLimit) {
+			insertCursor[_level]++;
+			return getNextGlobalUpline(_level);
 		}
-		// the last person on the queue is now ocupying the first position. let's move him back
-		paymentQueue[_level].push(paymentQueue[_level][paymentCursor[_level]]);
-		paymentCursor[_level]++;
-		// 22950
-		// 40050 => 
-		// 150200 => 30% => platinum
-		// 405000 => 120,000 => 30%
-
-		return _default;
+		return userAddresses[userID];
 	}
 
 	function canReceiveLevelPayment(uint _userID, uint _level) internal returns (bool){
+		if (_level == 1) {
+			return true;
+		}
 		if (directReferrals[_level][_userID] == 0) {
 			uint count;
 			for(uint i = 0; i < users[1][userAddresses[_userID]].referrals.length; i++){
@@ -583,9 +585,31 @@ contract TripleTronGlobal {
 					count ++;
 				}
 			}
+			for(uint i = 0; i < users[1][userAddresses[_userID]].directReferrals.length; i++){
+				if (users[_level][users[1][userAddresses[_userID]].directReferrals[i]].id > 0) {
+					count ++;
+				}
+			}
 			directReferrals[_level][_userID] = count;
 		}
 		return directReferrals[_level][_userID] >= earningCondition[_level];
+	}
+
+	function canUpgrade(uint _userID, uint _level) internal returns (bool){
+		uint count;
+		if(_level == 1) {
+			return true;
+		}
+		for(uint i = 0; i < users[1][userAddresses[_userID]].directReferrals.length; i++){
+			uint downlineID = users[1][users[1][userAddresses[_userID]].directReferrals[i]].id;
+			if (canReceiveLevelPayment(downlineID, _level)) {
+				count++;
+			}
+			if (count >= earningCondition[_level - 1]) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -606,6 +630,7 @@ contract TripleTronGlobal {
 			id : _id,
 			referrerID : _referrerID,
 			sponsorID: _referrerID,
+			position: 0,
 			referrals : new address[](0),
 			directReferrals : new address[](0),
 			created : _created
@@ -619,11 +644,13 @@ contract TripleTronGlobal {
 		emit RegisterUserEvent(userAddresses[_id], userAddresses[_referrerID], _created);
 
 		for (uint l = 2; l <= _level; l++) {
+			// todo: add to global pool
 			uint _refID = users[l][findReferrer(userAddresses[1], l, true, randNum)].id;
 			users[l][userAddresses[_id]] = User({
 				id : _id,
 				referrerID : _refID,
 				sponsorID: _referrerID,
+				position: 0,
 				referrals : new address[](0),
 				directReferrals : new address[](0),
 				created : _created
@@ -639,18 +666,16 @@ contract TripleTronGlobal {
 		usersLevels[userAddresses[_id]] = _level;
 	}
 
-	function updateDirectReferralCount() public onlyCreator() onlyForUpgrade() {
-		for(uint id = 1; id <= last_uid; id++) {
-			for (uint level = 1; level <= maxLevel; level++) {
-				if (directReferrals[level][id] == 0) {
-					uint count;
-					for(uint i = 0; i < users[1][userAddresses[id]].referrals.length; i++) {
-						if(users[level][users[1][userAddresses[id]].referrals[i]].created > 0) {
-							count++;
-						}
+	function updateDirectReferralCount(uint _id) public onlyCreator() onlyForUpgrade() {
+		for (uint level = 1; level <= maxLevel; level++) {
+			if (directReferrals[level][_id] == 0) {
+				uint count;
+				for(uint i = 0; i < users[1][userAddresses[_id]].referrals.length; i++) {
+					if(users[level][users[1][userAddresses[_id]].referrals[i]].created > 0) {
+						count++;
 					}
-					directReferrals[level][id] = count;
 				}
+				directReferrals[level][_id] = count;
 			}
 		}
 	}
@@ -739,6 +764,54 @@ contract TripleTronGlobal {
 		}
 
 		address(uint160(owner)).transfer(msg.value - sentValue);
+	}
+
+	function transferGlobalLevelPayment(uint _level, address _user) internal {
+		uint currentID = paymentQueue[_level][paymentCursor[_level]];
+		if (users[_level][userAddresses[currentID]].referrals.length >= referralLimit ||
+		 currentPaymentCount[_level] >= referralLimit) {
+			movePaymentCursor(_level);
+		}
+		address userToPay = userAddresses[paymentQueue[_level][paymentCursor[_level]]];
+
+		address(uint160(userToPay)).transfer(incentive[_level]);
+		profitsReceived[userToPay].uid = users[_level][userToPay].id;
+		profitsReceived[userToPay].fromId.push(users[_level][_user].id);
+		profitsReceived[userToPay].fromAddr.push(_user);
+		profitsReceived[userToPay].amount.push(incentive[_level]);
+		profitsReceived[userToPay].level.push(_level);
+
+		address referrer;
+		uint sentValue = incentive[_level];
+
+		for (uint i = 1; i < uplines[_level]; i++) { // stop at x - 1 as the 1st user was paid outside this loop
+			referrer = getUserUpline(userToPay, _level, i);
+			if (referrer == address(0)) {
+				referrer = owner;
+			}
+			profitsReceived[referrer].uid = users[_level][referrer].id;
+			profitsReceived[referrer].fromId.push(users[_level][_user].id);
+			profitsReceived[referrer].fromAddr.push(_user);
+			profitsReceived[referrer].amount.push(incentive[_level]);
+			profitsReceived[referrer].level.push(_level);
+
+			address(uint160(referrer)).transfer(incentive[_level]);
+			emit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);
+			sentValue += incentive[_level];
+		}
+
+		address(uint160(owner)).transfer(msg.value - sentValue);
+		currentPaymentCount[_level]++;
+	}
+
+	function movePaymentCursor(uint _level) internal {
+		currentPaymentCount[_level] = 0;
+		if (paymentQueue[_level][paymentCursor[_level]] + 1 > 0) {
+			paymentCursor[_level]++;
+			return;
+		}
+		uint parentID = users[_level][userAddresses[paymentQueue[_level][paymentCursor[_level]]]].referrerID;
+		paymentCursor[_level] = users[_level][userAddresses[parentID]].position + 1;
 	}
 
 	function insertV1LevelPayment(uint _level, address _user) internal {
