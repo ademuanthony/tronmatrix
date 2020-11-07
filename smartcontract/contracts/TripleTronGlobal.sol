@@ -542,6 +542,16 @@ contract TripleTronGlobal {
 			addToGlobalPool(userAddresses[directReferrals[_level][users[1][msg.sender].sponsorID]], _level);
 		}
 
+		users[_level][_user] = User({
+			id : users[1][_user].id,
+			sponsorID: users[1][_user].sponsorID,
+			referrerID : 0,
+			position: 0,
+			referrals : new address[](0),
+			directReferrals: new address[](0),
+			created : block.timestamp
+		});
+		
 		if(directReferrals[_level][users[1][msg.sender].id] >= earningCondition[_level]) {
 			// and to matrix and payment queue
 			addToGlobalPool(msg.sender, _level);
@@ -553,15 +563,8 @@ contract TripleTronGlobal {
 	function addToGlobalPool(address _user, uint _level) internal {
 		address parentAddr = getNextGlobalUpline(_level);
 		users[_level][parentAddr].referrals.push(_user);
-		users[_level][_user] = User({
-			id : users[1][_user].id,
-			sponsorID: users[1][_user].sponsorID,
-			referrerID : users[1][parentAddr].id,
-			position: paymentQueue[_level].length,
-			referrals : new address[](0),
-			directReferrals: new address[](0),
-			created : block.timestamp
-		});
+		users[_level][_user].referrerID = users[1][parentAddr].id;
+		users[_level][_user].position = paymentQueue[_level].length;
 		paymentQueue[_level].push(users[1][_user].id);
 	}
 

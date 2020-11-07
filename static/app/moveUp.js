@@ -14,19 +14,39 @@ window.insertV1User = async function (min, max) {
 			let levelResult = await fromContract.getUserLevel(_user).call();
 			let _level = parseInt(levelResult)
 
+
+			var referrals = await contractGlobal.getUserReferrals(sessionStorage.currentAccount, 1).call();
+			var referralsCount = [0, 0, 0, 0, 0, 0]
+			for (let i = 0; i < referrals.length; i++) {
+				result = await contractGlobal.getUserDetails(referrals[i]).call()
+				let level = parseInt(result[0]._hex);
+				for (let l = 0; l < 6; l++) {
+					if (level >= l + 1) {
+						referralsCount[l]++
+					}
+				}
+			}
+
+			result = await contractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call()
+			for (let i = 0; i < result.length; i++) {
+				referralsCount[i] += parseInt(result[i]._hex)
+			}
+			
 			let cumDirectDownlines = 0;
 			if (id == 10 || id == 11 || id == 4) {
 				cumDirectDownlines = 18
+				referralsCount = [3, 3, 3, 3, 3, 3]
 			}
-			if (id == 395 || id == 5) {
-				cumDirectDownlines = 6
+			if (id == 395 || id == 5 || id == 50) {
+				referralsCount = [3, 3, 0, 0, 0, 0]
 			}
 			if (id == 505) {
 				_level = 2
-				cumDirectDownlines = 6
+				referralsCount = [3, 3, 0, 0, 0, 0]
 			}
 
-			console.log(_user, id, parseInt(_referrerID._hex), parseInt(_created._hex), _level, cumDirectDownlines, randNum)
+			console.log(_user, id, parseInt(_referrerID._hex), parseInt(_created._hex), _level, referralsCount, randNum)
+			return
 			contractGlobal.insertV1User(_user, String(id), String(parseInt(_referrerID._hex)),
 					String(parseInt(_created._hex)), String(_level), String(cumDirectDownlines), String(randNum)).send({
 						feeLimit: 20000000,
