@@ -174,14 +174,6 @@ contract TripleTronGlobal {
 	event GetLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);
 	event LostLevelProfitEvent(address indexed user, address indexed referral, uint indexed level, uint time);
 
-	uint public decimals;
-	uint public totalSupply;
-	uint public rate;
-	uint public maxTokenAmount;
-	string public name;
-	string public symbol;
-	mapping(address => uint) public balances;
-
 	event Transfer(address from, address to, uint amount, uint time);
 
 	struct User {
@@ -236,14 +228,6 @@ contract TripleTronGlobal {
 		require(_level > 0 && _level <= maxLevel, 'Invalid level entered');
 		_;
 	}
-	modifier checkTotalSupply() {
-		require(_getTokenAmount(msg.value).add(totalSupply) < maxTokenAmount, "Maximum token amount crossed");
-		_;
-	}
-	modifier checkTotalSupplyWithAmount(uint amount) {
-		require(amount.add(totalSupply) < maxTokenAmount, "Maximum token amount crossed");
-		_;
-	}
 	modifier onlyCreator() {
 		require(msg.sender == creator, 'You are not the creator');
 		_;
@@ -259,15 +243,9 @@ contract TripleTronGlobal {
 
 	constructor(address _owner) public {
 		contractStatus = true;
-		name = "TripleTron";
-		symbol = "TPX";
 		owner = _owner;
 		creator = msg.sender;
 		created = block.timestamp;
-		totalSupply = 0;
-		decimals = 3;
-		rate = 100;
-		maxTokenAmount = 500000000 * (10 ** decimals);
 		levelDown = 5;
 		uint multiplier = 1000000;
 		levelPrice[1] = 100 * multiplier;
@@ -451,45 +429,13 @@ contract TripleTronGlobal {
 		revert();
 	}
 
-	function transfer(address receiver, uint amount) public {
-		require(amount <= balances[msg.sender], "Insufficient balance.");
-
-		balances[msg.sender] = balances[msg.sender].sub(amount);
-		balances[receiver] = balances[receiver].add(amount);
-
-		emit Transfer(msg.sender, receiver, amount, block.timestamp);
-	}
-
-	function mint(uint amount)
-	public
-	onlyCreator()
-	checkTotalSupplyWithAmount(amount) {
-		balances[creator] = balances[creator].add(amount);
-		totalSupply = totalSupply.add(amount);
-	}
-
-	function balanceOf(address _user) public view returns (uint) {
-		return balances[_user];
-	}
-
-	function _getTokenAmount(uint _weiAmount) internal view returns (uint) {
-		uint tokenAmount = _weiAmount;
-		tokenAmount = tokenAmount.mul(rate);
-		tokenAmount = tokenAmount.div(100 * (10 ** decimals));
-		return tokenAmount;
-	}
-
 	function registerUser(uint _referrerID, uint randNum)
 	public
 	payable
 	userNotRegistered()
 	validReferrerID(_referrerID)
-	checkTotalSupply()
 	contractActive()
 	validLevelAmount(1) {
-		uint amount = _getTokenAmount(msg.value);
-		balances[msg.sender] = balances[msg.sender].add(amount);
-		totalSupply = totalSupply.add(amount);
 
 		directReferrals[1][_referrerID] += 1;
 		users[1][userAddresses[_referrerID]].directReferrals.push(msg.sender);
@@ -522,12 +468,8 @@ contract TripleTronGlobal {
 	payable
 	userRegistered()
 	validLevel(_level)
-	checkTotalSupply()
 	contractActive()
 	validLevelAmount(_level) {
-		uint amount = _getTokenAmount(msg.value);
-		balances[msg.sender] = balances[msg.sender].add(amount);
-		totalSupply = totalSupply.add(amount);
 
 		for (uint l = _level - 1; l > 0; l--) {
 			require(users[l][msg.sender].id > 0, 'Buy previous level first');
@@ -542,9 +484,9 @@ contract TripleTronGlobal {
 			addToGlobalPool(userAddresses[directReferrals[_level][users[1][msg.sender].sponsorID]], _level);
 		}
 
-		users[_level][_user] = User({
-			id : users[1][_user].id,
-			sponsorID: users[1][_user].sponsorID,
+		users[_level][msg.sender] = User({
+			id : users[1][msg.sender].id,
+			sponsorID: users[1][msg.sender].sponsorID,
 			referrerID : 0,
 			position: 0,
 			referrals : new address[](0),
