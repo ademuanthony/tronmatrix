@@ -31,7 +31,7 @@ window.insertV1User = async function (min, max) {
 			for (let i = 0; i < result.length; i++) {
 				referralsCount[i] += parseInt(result[i]._hex)
 			}
-			
+
 			let cumDirectDownlines = 0;
 			if (id == 10 || id == 11 || id == 4) {
 				cumDirectDownlines = 18
@@ -48,7 +48,7 @@ window.insertV1User = async function (min, max) {
 			console.log(_user, id, parseInt(_referrerID._hex), parseInt(_created._hex), _level, referralsCount, randNum)
 			return
 			contractGlobal.insertV1User(_user, String(id), String(parseInt(_referrerID._hex)),
-					String(parseInt(_created._hex)), String(_level), String(cumDirectDownlines), String(randNum)).send({
+					String(parseInt(_created._hex)), String(_level), referralsCount, String(randNum)).send({
 						feeLimit: 20000000,
 					}).then((result) => {
 				console.log('done', result)

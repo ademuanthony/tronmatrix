@@ -647,21 +647,21 @@ contract TripleTronGlobal {
 		emit RegisterUserEvent(userAddresses[_id], userAddresses[_referrerID], _created);
 
 		for (uint l = 2; l <= _level; l++) {
-			// todo: add to global pool
-			uint _refID = users[l][findReferrer(userAddresses[1], l, true, randNum)].id;
 			users[l][userAddresses[_id]] = User({
 				id : _id,
-				referrerID : _refID,
+				referrerID : 0,
 				sponsorID: _referrerID,
 				position: 0,
 				referrals : new address[](0),
 				directReferrals : new address[](0),
 				created : _created
 			});
-			users[l][userAddresses[_refID]].referrals.push(userAddresses[_id]);
-			paymentQueue[l].push(_id);
 			if (cumDirectDownlines/3 >= l) {
 				directReferrals[l][_id] = 3;
+			}
+			if(directReferrals[_level][_id] >= earningCondition[_level]) {
+				// and to matrix and payment queue
+				addToGlobalPool(userAddresses[_id], _level);
 			}
 			emit BuyLevelEvent(userAddresses[_id], l, _created);
 		}
