@@ -1,5 +1,7 @@
 let referralArr = [];
 let total = 0;
+let userTotal = 0;
+let levelTotal = [0, 0, 0, 0, 0, 0];
 let referral24Hours = 0
 let totalUsers24Hours = 0;
 
@@ -28,7 +30,6 @@ function init() {
 	let url = "https://api.coingecko.com/api/v3/simple/price?ids=tron&vs_currencies=usd";
 	fetch(url).then(response => response.json()).then(data => {
 		let price = data.tron.usd;
-		getUserProfitsAmount(price);
 		getTotalEthProfit(price);
 	}).catch((err) => {
 		console.log("fetch data URL failed");
@@ -39,29 +40,6 @@ function init() {
 	getUserReferrals(sessionStorage.currentAccount, 10);
 	getUserDirectReferrals()
 	createBuyEvents();
-}
-
-function getUserProfitsAmount(price) {
-	contractGlobal.getUserProfits(sessionStorage.currentAccount).call().then((result) => {
-		let profits = result[2];
-		let levels = result[3];
-		let levelProfits = [0, 0, 0, 0, 0, 0]
-		let sum = 0;
-		for (let i = 0; i < profits.length; i++) {
-			sum += parseInt(profits[i]);
-			levelProfits[levels[i] - 1] += parseInt(profits[i])
-		}
-		sum /= multiplier;
-		$('#earnedEth').text(sum);
-		for (let i = 0; i < levelProfits.length; i++) {
-			$(`#level${i + 1} .earnings`).html(levelProfits[i] / multiplier)
-		}
-		let usd = price * sum;
-		$('#earnedUSD').text(usd.toFixed(2));
-	}).catch((err) => {
-		console.error('Call for User Direct Referrals Failed');
-		console.log(err);
-	});
 }
 
 async function getUserDirectReferrals(addr) {
@@ -103,33 +81,25 @@ function getTotalEthProfit(price, ts) {
 		sinceTimestamp: timestamp,
 		size: 200
 	}).then((event) => {
+		let levelProfit = [18, 75, 128, 325, 1000, 2750];
 		for (let i = 0; i < event.length; i++) {
-			let level = event[i].result.level;
-			switch (level) {
-				case "1":
-					total += 18;
-					break;
-				case "2":
-					total += 75;
-					break;
-				case "3":
-					total += 128;
-					break;
-				case "4":
-					total += 325;
-					break;
-				case "5":
-					total += 1000;
-					break;
-				case "6":
-					total += 2750
-					break;
-				default:
+			let level = parseInt(event[i].result.level);
+			total += levelProfit[level - 1];
+			if (tronWebGlobal.address.fromHex(event[i].result.referral) === sessionStorage.currentAccount) {
+				userTotal += levelProfit[level - 1];
+				levelTotal[level - 1] += levelProfit[level - 1];
 			}
 		}
 		let usd = (total * price).toFixed(2);
 		$("#totalEth").text(total.toFixed(2));
 		$("#totalUSD").text(usd);
+
+		$('#earnedEth').text(userTotal.toFixed(2));
+		$('#earnedUSD').text((userTotal * price).toFixed(2));
+		for (let i = 0; i < levelProfit.length; i++) {
+			$(`#level${i + 1} .earnings`).html(levelTotal[i].toFixed())
+		}
+
 		if (event.length == 200) {
 			ts = event[199].timestamp;
 			getTotalEthProfit(price, ts);

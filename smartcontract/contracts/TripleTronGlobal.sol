@@ -166,8 +166,6 @@ contract TripleTronGlobal {
 	mapping(uint => uint) currentPaymentCount;
 	mapping(uint => uint) insertCursor;
 	mapping(uint => uint) earningCondition;
-	mapping(address => ProfitsReceived) public profitsReceived;
-	mapping(address => ProfitsLost) public profitsLost;
 
 	event RegisterUserEvent(address indexed user, address indexed referrer, uint time);
 	event BuyLevelEvent(address indexed user, uint indexed level, uint time);
@@ -185,22 +183,6 @@ contract TripleTronGlobal {
 		address[] directReferrals;
 		mapping(uint => uint) levelActivationTime;
 		uint created;
-	}
-
-	struct ProfitsReceived {
-		uint uid;
-		uint[] fromId;
-		address[] fromAddr;
-		uint[] amount;
-		uint[] level;
-	}
-		
-	struct ProfitsLost {
-		uint uid;
-		uint[] toId;
-		address[] toAddr;
-		uint[] amount;
-		uint[] level;
 	}
 
 	modifier contractActive() {
@@ -687,20 +669,10 @@ contract TripleTronGlobal {
 				referrer = owner;
 			}
 			if (canReceiveLevelPayment(users[1][referrer].id, _level)) {
-				profitsReceived[referrer].uid = users[_level][referrer].id;
-				profitsReceived[referrer].fromId.push(users[_level][msg.sender].id);
-				profitsReceived[referrer].fromAddr.push(msg.sender);
-				profitsReceived[referrer].amount.push(incentive[_level]);
-				profitsReceived[referrer].level.push(_level);
 
 				address(uint160(referrer)).transfer(incentive[_level]);
 				emit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);
 			} else {
-				profitsLost[referrer].uid = users[_level][referrer].id;
-				profitsLost[referrer].toId.push(users[_level][msg.sender].id);
-				profitsLost[referrer].toAddr.push(msg.sender);
-				profitsLost[referrer].amount.push(incentive[_level]);
-				profitsLost[referrer].level.push(_level);
 
 				address(uint160(owner)).transfer(incentive[_level]);
 				emit LostLevelProfitEvent(_user, referrer, _level, block.timestamp);
@@ -720,11 +692,6 @@ contract TripleTronGlobal {
 		address userToPay = userAddresses[paymentQueue[_level][paymentCursor[_level]]];
 
 		address(uint160(userToPay)).transfer(incentive[_level]);
-		profitsReceived[userToPay].uid = users[_level][userToPay].id;
-		profitsReceived[userToPay].fromId.push(users[_level][_user].id);
-		profitsReceived[userToPay].fromAddr.push(_user);
-		profitsReceived[userToPay].amount.push(incentive[_level]);
-		profitsReceived[userToPay].level.push(_level);
 
 		address referrer;
 		uint sentValue = incentive[_level];
@@ -734,11 +701,6 @@ contract TripleTronGlobal {
 			if (referrer == address(0)) {
 				referrer = owner;
 			}
-			profitsReceived[referrer].uid = users[_level][referrer].id;
-			profitsReceived[referrer].fromId.push(users[_level][_user].id);
-			profitsReceived[referrer].fromAddr.push(_user);
-			profitsReceived[referrer].amount.push(incentive[_level]);
-			profitsReceived[referrer].level.push(_level);
 
 			address(uint160(referrer)).transfer(incentive[_level]);
 			emit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);
@@ -767,12 +729,6 @@ contract TripleTronGlobal {
 			if (referrer == address(0)) {
 				referrer = owner;
 			}
-
-			profitsReceived[referrer].uid = users[_level][referrer].id;
-			profitsReceived[referrer].fromId.push(users[_level][msg.sender].id);
-			profitsReceived[referrer].fromAddr.push(msg.sender);
-			profitsReceived[referrer].amount.push(incentive[_level]);
-			profitsReceived[referrer].level.push(_level);
 
 			emit GetLevelProfitEvent(_user, referrer, _level, block.timestamp);
 		}
@@ -831,20 +787,6 @@ contract TripleTronGlobal {
 	view
 	returns (uint) {
 		return users[_level][_user].created;
-	}
-
-	function getUserProfits(address _user)
-	public
-	view
-	returns (uint[] memory, address[] memory, uint[] memory, uint[] memory){
-		return (profitsReceived[_user].fromId, profitsReceived[_user].fromAddr, profitsReceived[_user].amount, profitsReceived[_user].level);
-	}
-
-	function getUserLosts(address _user)
-	public
-	view
-	returns (uint[] memory, address[] memory, uint[] memory, uint[] memory){
-		return (profitsLost[_user].toId, profitsLost[_user].toAddr, profitsLost[_user].amount, profitsLost[_user].level);
 	}
 
 	function getUserLevel(address _user) public view returns (uint) {
