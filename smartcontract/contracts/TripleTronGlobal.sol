@@ -266,10 +266,10 @@ contract TripleTronGlobal {
 				directReferrals : new address[](0),
 				created : block.timestamp
 			});
-			directReferrals[i][last_uid] = maxLevel * 3;
+			directReferrals[i][last_uid] = 3;
 			if (i > 1) {
 				paymentQueue[i].push(last_uid);
-
+				paymentCursor[i] = 0;
 			}
 		}
 		
@@ -457,7 +457,7 @@ contract TripleTronGlobal {
 			require(users[l][msg.sender].id > 0, 'Buy previous level first');
 		}
 		require(users[_level][msg.sender].id == 0, 'Level already active');
-		require(canUpgrade(_level, users[1][msg.sender].id), "You are not qualified to upgrade to this level");
+		require(canUpgrade(users[1][msg.sender].id, _level), "You are not qualified to upgrade to this level");
 
 		directReferrals[_level][users[1][msg.sender].sponsorID]++;
 		usersLevels[msg.sender] = _level;
@@ -501,46 +501,29 @@ contract TripleTronGlobal {
 		return userAddresses[userID];
 	}
 
-	function canReceiveLevelPayment(uint _userID, uint _level) internal returns (bool){
+	function canReceiveLevelPayment(uint _userID, uint _level) internal view returns (bool){
 		if (_level == 1) {
 			return true;
-		}
-		if (directReferrals[_level][_userID] == 0) {
-			uint count;
-			for(uint i = 0; i < users[1][userAddresses[_userID]].referrals.length; i++){
-				if (users[_level][users[1][userAddresses[_userID]].referrals[i]].id > 0) {
-					count ++;
-				}
-			}
-			for(uint i = 0; i < users[1][userAddresses[_userID]].directReferrals.length; i++){
-				if (users[_level][users[1][userAddresses[_userID]].directReferrals[i]].id > 0) {
-					count ++;
-				}
-			}
-			directReferrals[_level][_userID] = count;
 		}
 		return directReferrals[_level][_userID] >= earningCondition[_level];
 	}
 
-	function canUpgrade(uint _userID, uint _level) internal returns (bool){
-		uint count;
+	function canUpgrade(uint _userID, uint _level) internal view returns (bool){
 		if(_level == 1) {
 			return true;
 		}
+		uint count;
 		for(uint i = 0; i < users[1][userAddresses[_userID]].directReferrals.length; i++){
 			uint downlineID = users[1][users[1][userAddresses[_userID]].directReferrals[i]].id;
-			if (canReceiveLevelPayment(downlineID, _level)) {
+			if (canReceiveLevelPayment(downlineID, _level - 1)) {
 				count++;
 			}
-			if (count >= earningCondition[_level - 1]) {
-				return true;
-			}
 		}
-		return false;
+		return (count >= earningCondition[_level - 1]);
 	}
 
 
-	function insertV1User(address _user, uint _id, uint _referrerID, uint _created, uint _level, uint cumDirectDownlines, uint randNum) 
+	function insertV1User(address _user, uint _id, uint _referrerID, uint _created, uint _level, uint[] memory referralsCount, uint randNum) 
 	public
 	onlyCreator()
 	onlyForUpgrade()
@@ -580,9 +563,7 @@ contract TripleTronGlobal {
 				directReferrals : new address[](0),
 				created : _created
 			});
-			if (cumDirectDownlines/3 >= l) {
-				directReferrals[l][_id] = 3;
-			}
+			directReferrals[l][_id] = referralsCount[l-1];
 			if(directReferrals[_level][_id] >= earningCondition[_level]) {
 				// and to matrix and payment queue
 				addToGlobalPool(userAddresses[_id], _level);
@@ -591,20 +572,6 @@ contract TripleTronGlobal {
 		}
 
 		usersLevels[userAddresses[_id]] = _level;
-	}
-
-	function updateDirectReferralCount(uint _id) public onlyCreator() onlyForUpgrade() {
-		for (uint level = 1; level <= maxLevel; level++) {
-			if (directReferrals[level][_id] == 0) {
-				uint count;
-				for(uint i = 0; i < users[1][userAddresses[_id]].referrals.length; i++) {
-					if(users[level][users[1][userAddresses[_id]].referrals[i]].created > 0) {
-						count++;
-					}
-				}
-				directReferrals[level][_id] = count;
-			}
-		}
 	}
 
 	function findReferrer(address _user, uint level, bool traverseDown, uint randNum)
@@ -692,6 +659,7 @@ contract TripleTronGlobal {
 		address userToPay = userAddresses[paymentQueue[_level][paymentCursor[_level]]];
 
 		address(uint160(userToPay)).transfer(incentive[_level]);
+		emit GetLevelProfitEvent(_user, userToPay, _level, block.timestamp);
 
 		address referrer;
 		uint sentValue = incentive[_level];

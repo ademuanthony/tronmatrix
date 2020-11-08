@@ -42,18 +42,8 @@ function init() {
 	createBuyEvents();
 }
 
-async function getUserDirectReferrals(addr) {
-	var referrals = await contractGlobal.getUserReferrals(sessionStorage.currentAccount, 1).call();
+async function getUserDirectReferrals() {
 	var referralsCount = [0, 0, 0, 0, 0, 0]
-	for (let i = 0; i < referrals.length; i++) {
-		var result = await contractGlobal.getUserDetails(referrals[i]).call()
-		let level = parseInt(result[0]._hex);
-		for (let l = 0; l < 6; l++) {
-			if (level >= l + 1) {
-				referralsCount[l]++
-			}
-		}
-	}
 
 	contractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
 		for (let i = 0; i < result.length; i++) {
