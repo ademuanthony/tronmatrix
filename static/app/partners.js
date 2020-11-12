@@ -49,6 +49,8 @@ async function makeRoot(depth) {
 			}
 		}
 
+		console.log(rootList)
+		console.log(rootArray)
 		var map = {}, node, roots = [], i;
 		for (i = 0; i < rootList.length; i += 1) {
 			map[rootList[i].id] = i;

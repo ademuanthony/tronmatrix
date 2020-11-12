@@ -49,7 +49,7 @@ window.insertV1User = async function (min, max) {
 			return
 			contractGlobal.insertV1User(_user, String(id), String(parseInt(_referrerID._hex)),
 					String(parseInt(_created._hex)), String(_level), referralsCount, String(randNum)).send({
-						feeLimit: 20000000,
+						feeLimit: 1000000,
 					}).then((result) => {
 				console.log('done', result)
 			})

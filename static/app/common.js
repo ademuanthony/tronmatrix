@@ -1,7 +1,7 @@
 const multiplier = 1000000;
 const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
 // const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
-const contractAddress = 'TTD8XUsCTxVszkU4MHf4rDwsr8YBKWhkFG'
+const contractAddress = 'TCmGKNjM8HSbEdAG6WFq7QTEoZ6zZSwNpx'
 const networkApi = 'https://api.shasta.trongrid.io/'
 
 // const contractAddress = 'TPT92Y7sS9aQRDpsYPi6UdgRpev37njENY'

@@ -172,7 +172,7 @@ function addEventsForLevelBuy(level) {
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');
 
 	contractGlobal.buyLevel(level).send({
-		feeLimit: 35000000,
+		feeLimit: 10000000,
 		callValue: value
 	}).then(async function (receipt) {
 		$('#fadeLoading').popup('hide');
@@ -186,7 +186,7 @@ function addEventsForLevelBuy(level) {
 					showPopup('#fade', 'Transaction failed: Transaction was reversed');
 				} else if (res.ret[0].contractRet === 'SUCCESS') {
 					showPopup('#fade', 'Congratulation! You have purchased a new Level ' + level +
-						' contract! Note that you must have ' + level * 3 + ' direct referral to earn at this level');
+						' contract! Note that you must have 3 direct referrals at this level to start earning');
 					getUserDetails();
 				} else {
 					showPopup('#fade', 'Transaction failed: Make sure you have enough balance to cover upgrade and network fee then try again');
