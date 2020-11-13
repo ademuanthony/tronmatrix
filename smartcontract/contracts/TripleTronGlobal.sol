@@ -345,6 +345,9 @@ contract TripleTronGlobal {
 	}
 
 	function addToGlobalPool(address _user, uint _level) internal {
+		if (users[_level][_user].id == 0) {
+			return;
+		}
 		address parentAddr = getNextGlobalUpline(_level);
 		users[_level][parentAddr].referrals.push(_user);
 		users[_level][_user].referrerID = users[1][parentAddr].id;
@@ -364,6 +367,9 @@ contract TripleTronGlobal {
 	function canReceiveLevelPayment(uint _userID, uint _level) internal view returns (bool){
 		if (_level == 1) {
 			return true;
+		}
+		if (users[_level][userAddresses[_userID]].id == 0) {
+			return false;
 		}
 		return directReferrals[_level][_userID] >= earningCondition(_level);
 	}
