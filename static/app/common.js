@@ -1,14 +1,16 @@
 const multiplier = 1000000;
-const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
-// const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
-const contractAddress = 'THjbSJMYmYG2k2JQ7rcgU2PC3N3nCtjNUy'
-const networkApi = 'https://api.shasta.trongrid.io/'
 
-// const contractAddress = 'TPT92Y7sS9aQRDpsYPi6UdgRpev37njENY'
-// // const oldContractAddress.2 = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
-// // const oldContractAddress.1 = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
-// const ownerAddress = 'TGKk3JQAAHSLccSdRBPpqH1pgbze3hQo1Q'
-// const networkApi = 'https://api.trongrid.io/'
+// const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
+// // const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
+// const contractAddress = 'THjbSJMYmYG2k2JQ7rcgU2PC3N3nCtjNUy'
+// const networkApi = 'https://api.shasta.trongrid.io/'
+
+const contractAddress = 'TLpqJVNXJ3EAumCNHZ95cffzbBvNmaSZia'
+// const contractAddress.3 = 'TPT92Y7sS9aQRDpsYPi6UdgRpev37njENY'
+// const oldContractAddress.2 = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
+// const oldContractAddress.1 = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
+const ownerAddress = 'TGKk3JQAAHSLccSdRBPpqH1pgbze3hQo1Q'
+const networkApi = 'https://api.trongrid.io/'
 
 let tronWebGlobal;
 let contractGlobal;

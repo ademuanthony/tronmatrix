@@ -18,6 +18,9 @@ window.insertV1User = async function (min, max) {
 			var referrals = await contractGlobal.getUserReferrals(sessionStorage.currentAccount, 1).call();
 			var referralsCount = [0, 0, 0, 0, 0, 0]
 			for (let i = 0; i < referrals.length; i++) {
+				if (parseInt(_created._hex) < 1604028306) {
+					continue
+				}
 				result = await contractGlobal.getUserDetails(referrals[i]).call()
 				let level = parseInt(result[0]._hex);
 				for (let l = 0; l < 6; l++) {
@@ -37,7 +40,7 @@ window.insertV1User = async function (min, max) {
 				cumDirectDownlines = 18
 				referralsCount = [3, 3, 3, 3, 3, 3]
 			}
-			if (id == 395 || id == 5 || id == 50) {
+			if (id == 395 || id == 5 || id == 50 || id == 727 || id == 728 || id == 729 || id == 731) {
 				referralsCount = [3, 3, 0, 0, 0, 0]
 			}
 			if (id == 505) {
@@ -46,10 +49,10 @@ window.insertV1User = async function (min, max) {
 			}
 
 			console.log(_user, id, parseInt(_referrerID._hex), parseInt(_created._hex), _level, referralsCount, randNum)
-			return
+			//return
 			contractGlobal.insertV1User(_user, String(id), String(parseInt(_referrerID._hex)),
 					String(parseInt(_created._hex)), String(_level), referralsCount, String(randNum)).send({
-						feeLimit: 1000000,
+						feeLimit: 20000000,
 					}).then((result) => {
 				console.log('done', result)
 			})

@@ -414,7 +414,7 @@ contract TripleTronGlobal {
 		userAddresses[_id] = _user;
 		users[1][userAddresses[_referrerID]].referrals.push(userAddresses[_id]);
 		users[1][userAddresses[_referrerID]].directReferrals.push(userAddresses[_id]);
-		directReferrals[1][_referrerID]++;
+		directReferrals[1][_user] referralsCount[0];
 
 		insertV1LevelPayment(1, userAddresses[_id]);
 		emit RegisterUserEvent(userAddresses[_id], userAddresses[_referrerID], _created);
@@ -430,9 +430,9 @@ contract TripleTronGlobal {
 				created : _created
 			});
 			directReferrals[l][_id] = referralsCount[l-1];
-			if(directReferrals[_level][_id] >= earningCondition(_level)) {
+			if(directReferrals[l][_id] >= earningCondition(l)) {
 				// and to matrix and payment queue
-				addToGlobalPool(userAddresses[_id], _level);
+				addToGlobalPool(userAddresses[_id], l);
 			}
 			emit BuyLevelEvent(userAddresses[_id], l, _created);
 		}
