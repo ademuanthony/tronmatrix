@@ -414,7 +414,7 @@ contract TripleTronGlobal {
 		userAddresses[_id] = _user;
 		users[1][userAddresses[_referrerID]].referrals.push(userAddresses[_id]);
 		users[1][userAddresses[_referrerID]].directReferrals.push(userAddresses[_id]);
-		directReferrals[1][_user] referralsCount[0];
+		directReferrals[1][_id] = referralsCount[0];
 
 		insertV1LevelPayment(1, userAddresses[_id]);
 		emit RegisterUserEvent(userAddresses[_id], userAddresses[_referrerID], _created);
