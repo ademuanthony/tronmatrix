@@ -31,6 +31,7 @@ function init() {
 	fetch(url).then(response => response.json()).then(data => {
 		let price = data.tron.usd;
 		getTotalEthProfit(price);
+		getGPLTotalEthProfit(price);
 	}).catch((err) => {
 		console.log("fetch data URL failed");
 		console.log(err);
@@ -71,7 +72,30 @@ function getTotalEthProfit(price, ts) {
 		sinceTimestamp: timestamp,
 		size: 200
 	}).then((event) => {
-		let levelProfit = [18, 75, 128, 325, 1000, 2750];
+		displayProfit(event, price)
+	}).catch((err) => {
+		getTotalEthProfit(price, ts);
+		console.log(`getTotalEthProfit failed: ${err}`);
+	});
+}
+
+function getGPLTotalEthProfit(price, ts) {
+	let timestamp = ts ? ts : 0;
+	tronWebGlobal.getEventResult(gplContractAddress, {
+		onlyConfirmed: true,
+		eventName: 'GetLevelProfitEvent',
+		sinceTimestamp: timestamp,
+		size: 200
+	}).then((event) => {
+		displayProfit(event, price)
+	}).catch((err) => {
+		getTotalEthProfit(price, ts);
+		console.log(`getTotalEthProfit failed: ${err}`);
+	});
+}
+
+function displayProfit(event, price) {
+	let levelProfit = [18, 75, 128, 325, 1000, 2750];
 		for (let i = 0; i < event.length; i++) {
 			let level = parseInt(event[i].result.level);
 			total += levelProfit[level - 1];
@@ -94,10 +118,6 @@ function getTotalEthProfit(price, ts) {
 			ts = event[199].timestamp;
 			getTotalEthProfit(price, ts);
 		}
-	}).catch((err) => {
-		getTotalEthProfit(price, ts);
-		console.log(`getTotalEthProfit failed: ${err}`);
-	});
 }
 
 async function getUserReferrals(addr, depth) {
@@ -171,7 +191,7 @@ function addEventsForLevelBuy(level) {
 
 	showPopup('#fadeLoading', 'Please Wait while the transaction completes for Level ' + level + ' contract!');
 
-	contractGlobal.buyLevel(level).send({
+	gplContractGlobal.buyLevel(level).send({
 		feeLimit: 10000000,
 		callValue: value
 	}).then(async function (receipt) {

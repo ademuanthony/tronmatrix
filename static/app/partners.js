@@ -20,13 +20,13 @@ function init() {
 
 async function makeRoot(depth) {
 	showPopup('#fadeLoading', 'Please wait while the data is loading!');
+	let contract = levelID > 1 ? gplContractGlobal : contractGlobal
 	try {
-		let rootUser = await contractGlobal.getUser(sessionStorage.currentAccount, levelID).call();
-		let rootUserDetails = await contractGlobal.getUserDetails(sessionStorage.currentAccount).call();
+		let rootUser = await contract.getUser(sessionStorage.currentAccount, levelID).call();
 		rootUser['id'] = rootUser[0];
 		rootUser['depth'] = 1;
 		rootUser['parentId'] = rootUser[1];
-		rootUser['name'] = rootUser[0] + "(Lev - " + rootUserDetails[0] + ")";
+		rootUser['name'] = rootUser[0] + "(Lev - " + await getUserLevel(sessionStorage.currentAccount) + ")";
 
 		let rootArray = [rootUser];
 		let rootList = [rootUser];
@@ -35,22 +35,20 @@ async function makeRoot(depth) {
 			let childAddress = currentUser[2];
 			for (let i = 0; i < childAddress.length; i++) {
 				if (currentUser['depth'] < depth) {
-					let childUser = await contractGlobal.getUser(childAddress[i], levelID).call();
+					let childUser = await contract.getUser(childAddress[i], levelID).call();
 					let childUserDetails = await contractGlobal.getUserDetails(childAddress[i]).call();
 					childUser['id'] = childUser[0];
 					childUser['depth'] = currentUser['depth'] + 1;
 					childUser['parentId'] = childUser[1];
 					let add = tronWebGlobal.address.fromHex(childUserDetails[2])
 					childUser["direct"] = add == sessionStorage.currentAccount
-					childUser['name'] = childUser[0] + "(Lev - " + childUserDetails[0] + ")";
+					childUser['name'] = childUser[0] + "(Lev - " + await getUserLevel(childAddress[i]) + ")";
 					rootArray.push(childUser);
 					rootList.push(childUser);
 				}
 			}
 		}
 
-		console.log(rootList)
-		console.log(rootArray)
 		var map = {}, node, roots = [], i;
 		for (i = 0; i < rootList.length; i += 1) {
 			map[rootList[i].id] = i;

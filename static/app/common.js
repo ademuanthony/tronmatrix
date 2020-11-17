@@ -1,19 +1,21 @@
 const multiplier = 1000000;
 
-// const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
-// // const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
-// const contractAddress = 'THjbSJMYmYG2k2JQ7rcgU2PC3N3nCtjNUy'
-// const networkApi = 'https://api.shasta.trongrid.io/'
+const ownerAddress = 'TDohHm4kUXgjzgcjaNdh89pxf4aYJAiX88'
+// const contractAddress = 'TJ2CRPbcanWgGZS7pNFiRDB2fSxcrfLHsR'
+const contractAddress = 'TALiZf6q3Peyc8o4ug8699k44uisV3ikSY'
+const gplContractAddress = 'TUKp4aNE5zxHSQUBno66Z28DvySi6oesKA'
+const networkApi = 'https://api.shasta.trongrid.io/'
 
-const contractAddress = 'TVhubPSBHjnC4mcApp24gkdUWpynTZKj6J'
-// const contractAddress.3 = 'TPT92Y7sS9aQRDpsYPi6UdgRpev37njENY'
-// const oldContractAddress.2 = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
-// const oldContractAddress.1 = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
-const ownerAddress = 'TGKk3JQAAHSLccSdRBPpqH1pgbze3hQo1Q'
-const networkApi = 'https://api.trongrid.io/'
+// const contractAddress = 'TVhubPSBHjnC4mcApp24gkdUWpynTZKj6J'
+// // const contractAddress.3 = 'TPT92Y7sS9aQRDpsYPi6UdgRpev37njENY'
+// // const oldContractAddress.2 = 'TJ7sahmVoFN1Y9PPygydpUJqsobM4Gcgpe'
+// // const oldContractAddress.1 = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
+// const ownerAddress = 'TGKk3JQAAHSLccSdRBPpqH1pgbze3hQo1Q'
+// const networkApi = 'https://api.trongrid.io/'
 
 let tronWebGlobal;
 let contractGlobal;
+let gplContractGlobal;
 let isOwner = false;
 let refer = '';
 let isReferredLink = false;
@@ -43,15 +45,25 @@ if (sessionStorage.isViewOnly === 'true') {
 		await tronWebGlobal.setAddress(sessionStorage.currentAccount);
 		tronWebGlobal.contract().at(contractAddress).then((contract) => {
 			contractGlobal = contract;
-			_init(sessionStorage.currentAccount)
-			if (typeof init === 'function') {
-				init();
-			}
+			
+			tronWebGlobal.contract().at(gplContractAddress).then((contract) => {
+				gplContractGlobal = contract;
+				_init(sessionStorage.currentAccount)
+				if (typeof init === 'function') {
+					init();
+				}
+			}).catch((err) => {
+				console.error('Failed to get contract. Are you connected to main net?');
+				console.log(err);
+				showPopup('#fade', 'Failed to get contract. Are you connected to main net?');
+			});
+
 		}).catch((err) => {
 			console.error('Failed to get contract. Are you connected to main net?');
 			console.log(err);
 			showPopup('#fade', 'Failed to get contract. Are you connected to main net?');
 		});
+
 	});
 } else {
 	$(async function () {
@@ -77,22 +89,31 @@ if (sessionStorage.isViewOnly === 'true') {
 				tronWebGlobal = window.tronWeb;
 				tronWebGlobal.contract().at(contractAddress).then(async (contract) => {
 					contractGlobal = contract;
-					if (typeof init === 'function') {
-						getAccount().then(async () => {
-							_init(sessionStorage.currentAccount);
-							let userDetails = await contractGlobal.getUserDetails(sessionStorage.currentAccount).call();
-							if (typeof userDetails !== 'undefined' && typeof userDetails[0] !== 'undefined' && typeof userDetails[1] !== 'undefined' && parseInt(userDetails[0]) !== 0 && parseInt(userDetails[1]) !== 0) {
-								init();
-							} else {
-								if (window.location.href.indexOf('/start') === -1) {
-									window.location.href = '/';
+					
+					tronWebGlobal.contract().at(gplContractAddress).then(async (contract) => {
+						gplContractGlobal = contract;
+						if (typeof init === 'function') {
+							getAccount().then(async () => {
+								_init(sessionStorage.currentAccount);
+								let userDetails = await contractGlobal.getUserDetails(sessionStorage.currentAccount).call();
+								if (typeof userDetails !== 'undefined' && typeof userDetails[0] !== 'undefined' && typeof userDetails[1] !== 'undefined' && parseInt(userDetails[0]) !== 0 && parseInt(userDetails[1]) !== 0) {
+									init();
+								} else {
+									if (window.location.href.indexOf('/start') === -1) {
+										window.location.href = '/';
+									}
 								}
-							}
-						}).catch((err) => {
-							console.log('Get account failed');
-							console.log(err);
-						});
-					}
+							}).catch((err) => {
+								console.log('Get account failed');
+								console.log(err);
+							});
+						}
+					}).catch((err) => {
+						console.error('Failed to get contract. Are you connected to main net?');
+						console.log(err);
+						showPopup('#fade', 'Failed to get contract. Are you connected to main net?');
+					});
+
 				}).catch((err) => {
 					console.error('Failed to get contract. Are you connected to main net?');
 					console.log(err);
@@ -129,6 +150,11 @@ async function getAccount() {
 			});
 		}
 	});
+}
+
+async function getUserLevel(user) {
+	let result = await gplContractGlobal.getUserLevel(user).call();
+	return parseInt(result._hex) > 0 ? parseInt(result._hex) : 1
 }
 
 async function loginButton() {
@@ -323,14 +349,16 @@ function _init(addr) {
 }
 
 function getUserDetails() {
-	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then((result) => {
-		$('#idLevel').html(parseInt(result[0]._hex));
+	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then(async (result) => {
 		$('.idNum').html(parseInt(result[1]._hex));
 		$('#affLink').find('p').text('https://www.tripletron.com/start?refId=' + parseInt(result[1]._hex));
 		if (result[1]._hex == 1) {
 			isOwner = true;
 		}
-		buyLevelTrigger(parseInt(result[0]._hex));
+		let levelResult = await gplContractGlobal.getUserLevel(sessionStorage.currentAccount).call()
+		let level = parseInt(levelResult._hex) > 0 ? parseInt(levelResult) : parseInt(result[0]._hex)
+		$('#idLevel').html(level);
+		buyLevelTrigger(level);
 	}).catch((err) => {
 		console.error('Call for Level Failed');
 		console.log(err);
@@ -340,7 +368,7 @@ function getUserDetails() {
 function buyLevelTrigger(level) {
 	switch (level) {
 		case 6:
-			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 6).call().then((result) => {
+			gplContractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 6).call().then((result) => {
 				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
@@ -355,7 +383,7 @@ function buyLevelTrigger(level) {
 				console.log(err);
 			});
 		case 5:
-			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 5).call().then((result) => {
+			gplContractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 5).call().then((result) => {
 				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
@@ -370,7 +398,7 @@ function buyLevelTrigger(level) {
 				console.log(err);
 			});
 		case 4:
-			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 4).call().then((result) => {
+			gplContractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 4).call().then((result) => {
 				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
@@ -385,7 +413,7 @@ function buyLevelTrigger(level) {
 				console.log(err);
 			});
 		case 3:
-			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 3).call().then((result) => {
+			gplContractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 3).call().then((result) => {
 				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
@@ -400,7 +428,7 @@ function buyLevelTrigger(level) {
 				console.log(err);
 			});
 		case 2:
-			contractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 2).call().then((result) => {
+			gplContractGlobal.getLevelActivationTime(sessionStorage.currentAccount, 2).call().then((result) => {
 				if (result == 0) return
 				var dt = new Date(result * 1000);
 				var now = new Date();
