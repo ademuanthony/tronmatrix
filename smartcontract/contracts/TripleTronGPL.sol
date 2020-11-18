@@ -157,22 +157,11 @@ contract TripleTronGPL {
 		emit BuyLevelEvent(msg.sender, _level, block.timestamp);
 	}
 
-	function getMainUserInfo(address _user) internal view returns(uint, address) {
-		(,uint _id, address _sponsor) = main.getUserDetails(_user);
-		return (_id, _sponsor);
-	}
-
-	function getMainUserID(address _user) internal view returns(uint) {
-		(uint id,) = getMainUserInfo(_user);
-		return id;
-	}
-
-	function getUserAddress(uint _id) internal view returns(address) {
-		return main.userAddresses(_id);
-	}
-
 	function addToGlobalPool(address _user, uint _level) internal {
-		if (users[_level][_user].id == 0) {
+		if (users[_level][_user].id == 0 || users[_level][_user].id == 1) {
+			return;
+		}
+		if (users[_level][_user].referrerID != 0) {
 			return;
 		}
 		(uint id, address sponsorAddr) = getMainUserInfo(_user);
@@ -205,7 +194,7 @@ contract TripleTronGPL {
 	}
 
 
-	function insertV1User(address _user, uint _id, uint _referrerID, uint _created, 
+	function insertV1User(address _user, uint _id, address _sponsor, uint _created, 
 	uint _level, uint[] memory referralsCount) 
 	public
 	onlyCreator()
@@ -214,14 +203,23 @@ contract TripleTronGPL {
 		require(users[2][_user].id == 0, 'User is already registered');
 
 		for (uint l = 2; l <= _level; l++) {
+			uint _sponsorID = getMainUserID(_sponsor);
+
 			users[l][_user] = User({
 				id : _id,
 				referrerID : 0,
-				sponsorID: _referrerID,
+				sponsorID: _sponsorID,
 				position: 0,
 				referrals : new address[](0),
 				created : _created
 			});
+
+			directReferrals[l][_sponsorID]++;
+			if(directReferrals[l][_sponsorID] >= earningCondition(l)) {
+				// and to matrix and payment queue
+				addToGlobalPool(_sponsor, l);
+			}
+
 			directReferrals[l][_id] = referralsCount[l-1];
 			if(directReferrals[l][_id] >= earningCondition(l)) {
 				// and to matrix and payment queue
@@ -365,6 +363,20 @@ contract TripleTronGPL {
 			users[_level][_user].referrals, 
 			users[_level][_user].created
 		);
+	}
+
+	function getMainUserInfo(address _user) internal view returns(uint, address) {
+		(,uint _id, address _sponsor) = main.getUserDetails(_user);
+		return (_id, _sponsor);
+	}
+
+	function getMainUserID(address _user) internal view returns(uint) {
+		(uint id,) = getMainUserInfo(_user);
+		return id;
+	}
+
+	function getUserAddress(uint _id) internal view returns(address) {
+		return main.userAddresses(_id);
 	}
 
 	function getUserReferrals(address _user, uint _level)

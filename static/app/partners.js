@@ -6,6 +6,7 @@ let levelID = 1;
 outerFlag = false;
 
 $(function () {
+	$('#teamLevel').hide()
 	$('#teamLevel').change(function () {
 		levelID = parseInt($('#teamLevel').val())
 		makeRoot(11).then()
@@ -15,7 +16,8 @@ $(function () {
 function init() {
 	$('.loader-section').css('display', 'none');
 	getUserDetails();
-	makeRoot(11).then();
+	// makeRoot(11).then();
+	$('#teamLevel').show()
 }
 
 async function makeRoot(depth) {
@@ -26,7 +28,7 @@ async function makeRoot(depth) {
 		rootUser['id'] = rootUser[0];
 		rootUser['depth'] = 1;
 		rootUser['parentId'] = rootUser[1];
-		rootUser['name'] = rootUser[0] + "(Lev - " + await getUserLevel(sessionStorage.currentAccount) + ")";
+		rootUser['name'] = "(ID - " + await rootUser[0] + ")";
 
 		let rootArray = [rootUser];
 		let rootList = [rootUser];
@@ -42,7 +44,7 @@ async function makeRoot(depth) {
 					childUser['parentId'] = childUser[1];
 					let add = tronWebGlobal.address.fromHex(childUserDetails[2])
 					childUser["direct"] = add == sessionStorage.currentAccount
-					childUser['name'] = childUser[0] + "(Lev - " + await getUserLevel(childAddress[i]) + ")";
+					childUser['name'] = "(ID - " + childUser[0] + ")";
 					rootArray.push(childUser);
 					rootList.push(childUser);
 				}

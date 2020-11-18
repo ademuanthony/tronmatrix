@@ -46,8 +46,8 @@ function init() {
 async function getUserDirectReferrals() {
 	var referralsCount = [0, 0, 0, 0, 0, 0]
 
-	contractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
-		for (let i = 0; i < result.length; i++) {
+	gplContractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
+		for (let i = 1; i < result.length; i++) {
 			if (parseInt(result[i]._hex) > 0) {
 				referralsCount[i] += parseInt(result[i]._hex)
 			}
@@ -123,6 +123,7 @@ function displayProfit(event, price) {
 async function getUserReferrals(addr, depth) {
 	let directRecruit = await contractGlobal.getUserRecruit(addr).call();
 	$('#directRecruit').text(directRecruit)
+	$(`#level1 .direct-referrals`).html(`${directRecruit} direct referrals`)
 
 	let queue = [];
 	queue.push({
