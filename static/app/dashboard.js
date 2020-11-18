@@ -26,7 +26,7 @@ $(document).ready(function () {
 	$('#level6 .earnings').html(loader)
 })
 	
-function init() {
+async function init() {
 	let url = "https://api.coingecko.com/api/v3/simple/price?ids=tron&vs_currencies=usd";
 	fetch(url).then(response => response.json()).then(data => {
 		let price = data.tron.usd;
@@ -36,7 +36,7 @@ function init() {
 		console.log("fetch data URL failed");
 		console.log(err);
 	});
-	getUserDetails();
+	await getUserDetails();
 	getTotalUsers();
 	getUserReferrals(sessionStorage.currentAccount, 10);
 	getUserDirectReferrals()
@@ -44,24 +44,12 @@ function init() {
 }
 
 async function getUserDirectReferrals() {
-	var referralsCount = [0, 0, 0, 0, 0, 0]
-
-	gplContractGlobal.getUserDirectReferralCounts(sessionStorage.currentAccount).call().then((result) => {
-		for (let i = 1; i < result.length; i++) {
-			if (parseInt(result[i]._hex) > 0) {
-				referralsCount[i] += parseInt(result[i]._hex)
-			}
-			if (referralsCount[i] > 0) {
-				$(`#level${i + 1} .direct-referrals`).html(`${referralsCount[i]} direct referrals`)
-			}
-			if (i + 1 == 1) {
-				$('#directReferrals').html(parseInt(referralsCount[i]))
-			}
+	for (let i = 2; i <= 6; i++) {
+		let referralsCount = parseInt((await gplContractGlobal.directReferrals(i, userID).call())._hex)
+		if (referralsCount > 0) {
+			$(`#level${i} .direct-referrals`).html(`${referralsCount} direct referrals`)
 		}
-	}).catch((err) => {
-		console.error('Call for User Direct Referral Failed');
-		console.log(err);
-	});
+	}
 }
 
 function getTotalEthProfit(price, ts) {
@@ -122,7 +110,7 @@ function displayProfit(event, price) {
 
 async function getUserReferrals(addr, depth) {
 	let directRecruit = await contractGlobal.getUserRecruit(addr).call();
-	$('#directRecruit').text(directRecruit)
+	$('#directReferrals').text(directRecruit)
 	$(`#level1 .direct-referrals`).html(`${directRecruit} direct referrals`)
 
 	let queue = [];

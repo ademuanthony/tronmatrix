@@ -19,6 +19,7 @@ let gplContractGlobal;
 let isOwner = false;
 let refer = '';
 let isReferredLink = false;
+let userID;
 
 if (sessionStorage.isViewOnly === 'true') {
 	$(async function () {
@@ -348,8 +349,10 @@ function _init(addr) {
 
 }
 
-function getUserDetails() {
-	contractGlobal.getUserDetails(sessionStorage.currentAccount).call().then(async (result) => {
+async function getUserDetails() {
+	try {
+		let result = await contractGlobal.getUserDetails(sessionStorage.currentAccount).call()
+		userID = parseInt(result[1]._hex)
 		$('.idNum').html(parseInt(result[1]._hex));
 		$('#affLink').find('p').text('https://www.tripletron.com/start?refId=' + parseInt(result[1]._hex));
 		if (result[1]._hex == 1) {
@@ -359,10 +362,10 @@ function getUserDetails() {
 		let level = parseInt(levelResult._hex) > 0 ? parseInt(levelResult) : parseInt(result[0]._hex)
 		$('#idLevel').html(level);
 		buyLevelTrigger(level);
-	}).catch((err) => {
+	} catch (err) {
 		console.error('Call for Level Failed');
 		console.log(err);
-	});
+	}
 }
 
 function buyLevelTrigger(level) {

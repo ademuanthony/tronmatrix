@@ -22,7 +22,7 @@ function getUserDetails1() {
 function getUserUpline(level) {
 	let ul = {};
 	level = (level > 6) ? 6 : level;
-	let contract = level > 1 ? gplContractGlobal : contractGlobal
+	let contract = contractGlobal
 	contract.getUserUpline(sessionStorage.currentAccount, level, 1).call(function (error, result) {
 		ul[0] = result;
 		contract.getUserUpline(sessionStorage.currentAccount, level, 2).call(function (error, result) {
@@ -124,7 +124,7 @@ async function fillUplineData(obj, _level) {
 		if (address === '410000000000000000000000000000000000000000') {
 			continue
 		}
-		let id, level;
+		let id;
 		if (address !== '410000000000000000000000000000000000000000') {
 			let user = await contractGlobal.getUserDetails(address).call();
 			address = tronWebGlobal.address.fromHex(address);
