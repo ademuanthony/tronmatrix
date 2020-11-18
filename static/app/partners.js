@@ -6,7 +6,13 @@ let levelID = 1;
 outerFlag = false;
 
 $(function () {
-	$('#teamLevel').hide()
+	$('#divLoader').hide()
+	
+	$('#btnLoad').click(function () {
+		levelID = parseInt($('#teamLevel').val())
+		makeRoot(11).then()
+	})
+
 	$('#teamLevel').change(function () {
 		levelID = parseInt($('#teamLevel').val())
 		makeRoot(11).then()
@@ -17,7 +23,7 @@ function init() {
 	$('.loader-section').css('display', 'none');
 	getUserDetails();
 	// makeRoot(11).then();
-	$('#teamLevel').show()
+	$('#divLoader').show()
 }
 
 async function makeRoot(depth) {
