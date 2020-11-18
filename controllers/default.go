@@ -52,7 +52,7 @@ func (c *MainController) Dashboard() {
 
 func (c *MainController) MyTeam() {
 	c.Data["teamActive"] = "active"
-	c.Data["Script"] = "/static/app/partners.js?v=2.3"
+	c.Data["Script"] = "/static/app/partners.js?v=2.5"
 	c.Layout = "layout.html"
 	c.TplName = "team.html"
 }
