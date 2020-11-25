@@ -247,8 +247,8 @@ async function previewMode() {
 }
 
 async function signup() {
-	if (!confirm('Do you have up 30 extra TRX to pay for network fee?')) {
-		alert('The current state of the market demands about 20 TRX for network fee')
+	if (!confirm('Do you have up 40 extra TRX to pay for network fee?')) {
+		alert('The current state of the market demands about 30 TRX for network fee')
 		return
 	}
 	let globalRef = 1; // Math.floor(Math.random() * 136) + 1;
