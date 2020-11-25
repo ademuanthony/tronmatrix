@@ -247,6 +247,10 @@ async function previewMode() {
 }
 
 async function signup() {
+	if (!confirm('Do you have up 30 extra TRX to pay for network fee?')) {
+		alert('The current state of the market demands about 20 TRX for network fee')
+		return
+	}
 	let globalRef = 1; // Math.floor(Math.random() * 136) + 1;
 	if (typeof tronWebGlobal === 'undefined' || typeof tronWebGlobal.trx === 'undefined') {
 		showPopup('#fade', 'Tronlink wallet not found');
@@ -266,7 +270,7 @@ async function signup() {
 
 		showPopup('#fadeLoading', 'Signing up, please wait...');
 		contractGlobal.registerUser(refer, r).send({
-			feeLimit: 20000000,
+			feeLimit: 80000000,
 			callValue: 100 * multiplier
 		}).then(async (receipt) => {
 			$('#fadeLoading').popup('hide');
