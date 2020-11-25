@@ -270,7 +270,7 @@ async function signup() {
 
 		showPopup('#fadeLoading', 'Signing up, please wait...');
 		contractGlobal.registerUser(refer, r).send({
-			feeLimit: 80000000,
+			feeLimit: 100000000,
 			callValue: 100 * multiplier
 		}).then(async (receipt) => {
 			$('#fadeLoading').popup('hide');
