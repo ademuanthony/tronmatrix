@@ -1,7 +1,7 @@
 const multiplier = 1000000;
 
 const ownerAddress = 'TQNuR2FXb2rSb7ZZUxmZ1HQAZ3s1VMTCaL'
-const contractAddress = 'TKLMAqTB3TH3t8tUUUYBYAo16BpN1sfrfB'
+const contractAddress = 'TYdQW4UYasZBU8BpWpTh2FTotK2gWjoyPF'
 const networkApi = 'https://api.shasta.trongrid.io/'
 
 // const contractAddress = 'TRUforvgWS4b9xnZBGipxZ97oNGRCZDTvH'
@@ -152,6 +152,7 @@ async function login(msg) {
 				sessionStorage.isViewOnly = false;
 				window.location.href = '/dashboard';
 			} else {
+				if(msg === '') return
 				showPopup('#fade', msg || 'You are not registered');
 			}
 		}).catch((err) => {
@@ -241,8 +242,7 @@ async function signup() {
 			callValue: 40 * multiplier
 		}).then(async (receipt) => {
 			$('#fadeLoading').popup('hide');
-			login('Registration failed. Please try again later')
-			return
+			login('') // if login succeed, the user wont have to wait
 			showPopup('#fadeLoading', 'Waiting for the transaction to complete, please wait...');
 			checkTransactionStatus(receipt, 0).then(async (res) => {
 				console.log(res)

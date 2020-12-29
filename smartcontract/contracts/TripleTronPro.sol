@@ -68,8 +68,8 @@ contract TripleTronPro {
                 referredUsers:0
             });
             levelActiveUserID[l] = levelCurrUserID[l];
-            levelUsers[l][msg.sender] = leveluser;
-            levelUserList[l][levelCurrUserID[l]]=msg.sender;
+            levelUsers[l][ownerWallet] = leveluser;
+            levelUserList[l][levelCurrUserID[l]] = ownerWallet;
        }
        
         //// for networkFee
@@ -97,7 +97,6 @@ contract TripleTronPro {
                 paymentReceived:0,
                 referredUsers: 0
             });
-            levelActiveUserID[l] = levelCurrUserID[l];
             levelUsers[l][networkFee] = leveluser;
             levelUserList[l][levelCurrUserID[l]] = networkFee;
        }   
@@ -164,9 +163,8 @@ contract TripleTronPro {
             return;
         }
         address referrer = userList[users[_user].referrerID];
-        LevelUserStruct memory levelUser = levelUsers[_level][referrer];
-        if(levelUser.isExist) {
-            levelUser.referredUsers+=1;
+        if(levelUsers[_level][referrer].isExist) {
+            levelUsers[_level][referrer].referredUsers+=1;
             address(uint160(referrer)).transfer(_amount);
             emit PayReferralEvent(referrer, _user, _level, now);
         } else {

@@ -37,22 +37,16 @@ async function init() {
 		console.log(err);
 	});
 	await getUserDetails();
-	getUserReferrals(sessionStorage.currentAccount);
+	getReferralAndEarnings(sessionStorage.currentAccount);
 	createBuyEvents();
 }
 
-async function getUserDirectReferrals() {
-	for (let i = 2; i <= 6; i++) {
-		let referralsCount = parseInt((await gplContractGlobal.directReferrals(i, userID).call())._hex)
-		if (referralsCount > 0) {
-			$(`#level${i} .direct-referrals`).html(`${referralsCount} direct referrals`)
-		}
-	}
-}
-
-async function getUserReferrals(addr) {
+async function getReferralAndEarnings(addr) {
 	let directRecruit = await contractGlobal.users(addr).call();
 	$('#directReferrals').text(parseInt(directRecruit.referredUsers._hex))
+	totalEarnings += (parseInt(directRecruit.referredUsers._hex) * levelPrice(1))
+	$('#earnedEth').text((totalEarnings/multiplier).toFixed(2))
+	$('#earnedUSD').text((trxPrice * totalEarnings/multiplier).toFixed(2))
 }
 
 function getGlobalInfo(price) {
