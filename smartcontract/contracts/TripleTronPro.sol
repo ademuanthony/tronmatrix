@@ -119,6 +119,10 @@ contract TripleTronPro {
     }
 
     function levelReferralCommission(uint _level) public pure returns(uint) {
+        if (_level == 1) {
+            return 0;
+        }
+
         if(_level >= 11) {
             return 20;
         }
@@ -146,7 +150,7 @@ contract TripleTronPro {
         });
 
         users[msg.sender] = userStruct;
-        userList[currUserID]=msg.sender;
+        userList[currUserID] = msg.sender;
 
         users[userList[users[msg.sender].referrerID]].referredUsers++;
 

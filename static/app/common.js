@@ -347,6 +347,8 @@ function levelPrice(level) {
 }
 
 function levelCommission(level) {
+	if (level == 1) return 0;
+
 	if(level >= 11) {
 		return 20;
 	}
@@ -377,7 +379,7 @@ async function buyLevelTrigger() {
 				$('#earnedUSD').text((trxPrice * totalEarnings/multiplier).toFixed(2))
 				continue
 			}
-			$(selector).children().find('p').text("Active");
+			$(selector).children().find('p.status').text("Active");
 			$(selector).children().addClass('buyLevelActivated');
 			$(selector).addClass('bg-c-green')
 			$(`#level${level}Buy`).hide()
@@ -388,7 +390,7 @@ async function buyLevelTrigger() {
 			let payments = parseInt(result.paymentReceived._hex)
 			let maxPayout = level <= 2 ? 2 : 3
 			if (payments >= maxPayout) {
-				$(selector).children().find('p').text("Completed");
+				$(selector).children().find('p.status').text("Completed");
 			}
 			let levelEarnings = levelProfit(level, payments)
 			$(selector).children().find('span.earnings').text((levelEarnings/multiplier).toFixed(2))
