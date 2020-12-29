@@ -2,7 +2,7 @@ pragma solidity 0.5.8;
 
 // TQPJS5zEdMV6JxVUfo93HbYYBVG6Dm2dwo
 
-contract TripleTronPro {
+contract GlobalPool {
     address payable public ownerWallet;
     address payable internal networkFee;
     uint public currUserID;
@@ -38,8 +38,8 @@ contract TripleTronPro {
     event BuyLevelEvent(address indexed _user,uint _value, uint _time);
     event GetLevelPaymentEvent(address indexed _user,address indexed _receiver, uint _value, uint _time);
      
-    constructor(address payable _networkFee) public {
-        ownerWallet = _networkFee;
+    constructor(address payable _owner) public {
+        ownerWallet = _owner;
         networkFee = msg.sender;
     
         UserStruct memory userStruct;
