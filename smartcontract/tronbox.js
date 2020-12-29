@@ -15,7 +15,7 @@ Then, run the migration with:
   source .env && tronbox migrate --network mainnet
 
 */
-      userFeePercentage: 0,
+      userFeePercentage: 30,
       feeLimit: 1e9,
       fullHost: 'https://api.trongrid.io',
       network_id: '1'

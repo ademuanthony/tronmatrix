@@ -1,6 +1,12 @@
 pragma solidity 0.5.8;
 
-// TQPJS5zEdMV6JxVUfo93HbYYBVG6Dm2dwo
+// GlobalPool
+// P2P smart contract
+// Registration fee: 20 TRX
+// Potential earning (Without referral): 117,732 TRX
+// Potential eearning from each referral: 16,464 TRX
+// Fully decentralized
+// No backdoor
 
 contract GlobalPool {
     address payable public ownerWallet;
