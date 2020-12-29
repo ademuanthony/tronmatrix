@@ -7,7 +7,7 @@ contract TripleTronPro {
     address payable internal networkFee;
     uint public currUserID;
     uint public totalPayout;
-    uint REGISTRATION_FEE = 40  * (10**6);
+    uint REGISTRATION_FEE = 20  * (10**6);
 
     mapping(uint => uint) public levelCurrUserID;
     mapping(uint => uint) public levelActiveUserID;
@@ -107,11 +107,12 @@ contract TripleTronPro {
 	}
 
     function levelPrice(uint _level) public pure returns(uint) {
-        if (_level == 2) {
-            return 80 * 10**6;
-        }
         if (_level == 1) {
-            return 40 * 10**6;
+            return REGISTRATION_FEE;
+        }
+
+        if (_level == 2) {
+            return 2 * REGISTRATION_FEE;
         }
 
         return (levelPrice(_level - 1) + levelPrice(_level - 2));

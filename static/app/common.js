@@ -16,6 +16,7 @@ let isReferredLink = false;
 
 let totalEarnings = 0
 let trxPrice = 0.028
+const registrationFee = 20 * multiplier
 
 if (sessionStorage.isViewOnly === 'true') {
 	$(async function () {
@@ -239,7 +240,7 @@ async function signup() {
 		showPopup('#fadeLoading', 'Signing up, please wait...');
 		contractGlobal.register(refer).send({
 			feeLimit: 100000000,
-			callValue: 40 * multiplier
+			callValue: registrationFee
 		}).then(async (receipt) => {
 			$('#fadeLoading').popup('hide');
 			login('') // if login succeed, the user wont have to wait
@@ -336,11 +337,11 @@ function getUserDetails() {
 }
 
 function levelPrice(level) {
-	if (level == 2) {
-		return 80 * multiplier;
-	}
 	if (level == 1) {
-			return 40 * multiplier;
+			return registrationFee;
+	}
+	if (level == 2) {
+		return 2 * levelPrice(1);
 	}
 
 	return (levelPrice(level - 1) + levelPrice(level - 2));
