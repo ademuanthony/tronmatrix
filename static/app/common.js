@@ -326,7 +326,7 @@ function getUserDetails() {
 	contractGlobal.users(sessionStorage.currentAccount).call().then((result) => {
 		sessionStorage.userID = parseInt(result.id._hex)
 		$('.idNum').html(sessionStorage.userID);
-		$('#affLink').find('p').text('https://www.tripletron.com/start?refId=' + sessionStorage.userID);
+		$('#affLink').find('p').text('https://globalpool.tripletron.com/start?refId=' + sessionStorage.userID);
 		
 		buyLevelTrigger();
 	}).catch((err) => {
