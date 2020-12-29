@@ -1,5 +1,5 @@
-var TripleTronGPL = artifacts.require("./TripleTronGPL.sol");
+var TripleTronPro = artifacts.require("./TripleTronPro.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(TripleTronGPL, 'TDohHm4kUXgjzgcjaNdh89pxf4aYJAiX88', 'TPT92Y7sS9aQRDpsYPi6UdgRpev37njENY');
+  deployer.deploy(TripleTronPro, 'TLeQrQeag83jDpKaNzeJYRYM2YrPEfgmtu');
 };
