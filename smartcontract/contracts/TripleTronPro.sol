@@ -108,11 +108,11 @@ contract TripleTronPro {
 
     function levelPrice(uint _level) public pure returns(uint) {
         if (_level == 1) {
-            return REGISTRATION_FEE;
+            return 20  * (10**6);
         }
 
         if (_level == 2) {
-            return 2 * REGISTRATION_FEE;
+            return 2 * levelPrice(1);
         }
 
         return (levelPrice(_level - 1) + levelPrice(_level - 2));
